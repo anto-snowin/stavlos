@@ -108,7 +108,22 @@ npm start
 ```
 Open [http://localhost:3000](http://localhost:3000) to view the live dashboard.
 
-### 6. Run Automated Tests
+### 6. Run Advisory Alerting Service (Phase 5)
+Monitor pools for sudden TVL contractions, APY spikes, and risk grade transitions:
+
+```bash
+# Run synthetic market shock simulation (Phase 5 Checkpoint verification):
+python -m src.cli.alert --simulate
+
+# Run live anomaly detection across stored active pools:
+python -m src.cli.alert --check
+
+# Run with custom Webhook and sensitivity thresholds:
+python -m src.cli.alert --check --webhook-url https://hooks.slack.com/... --tvl-drop 15 --apy-spike 5.0
+```
+
+### 7. Run Automated Tests
+Run the comprehensive 35-test suite covering ingestion, normalization, storage, scoring, backtesting, FastAPI endpoints, and alerting:
 ```bash
 python -m pytest -v
 ```
@@ -122,5 +137,6 @@ python -m pytest -v
 - [x] **Phase 2 — Risk Scoring Model**: Pure stateless scoring engine penalizing low TVL, short protocol age, 30d APY volatility, chain risk tiers, and bridge friction; deterministic plain-English explanations; CLI table generator; 18 unit tests.
 - [x] **Phase 3 — Backtesting Engine**: Replays historical yields; models gas friction, bridge fees, minimum lockup, and churn hurdles; outputs side-by-side performance reports, trade logs, and ASCII equity curves; 23 unit tests.
 - [x] **Phase 4 — Dashboard (Next.js)**: Full-stack institutional dashboard; FastAPI analytical gateway; sortable ranked pool table with quantitative audit drawers; Recharts historical APY trends; interactive 180d backtest visualizer; persistent non-execution disclaimer banner.
-- [ ] **Phase 5 — Alerting** (Next)
+- [x] **Phase 5 — Alerting**: Automated monitoring service detecting TVL contractions ($\le -15\%$), APY surges ($\ge +5\%$), and risk grade drops; multi-channel dispatchers (Console, SQLite DB, Webhook); synthetic market shock test suite with 35 passing tests.
 - [ ] **Phase 6 — Portfolio Positioning**
+

@@ -96,6 +96,25 @@ CREATE TABLE IF NOT EXISTS ingestion_logs (
     success INTEGER NOT NULL,
     error_message TEXT
 );
+
+CREATE TABLE IF NOT EXISTS alert_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_id TEXT UNIQUE NOT NULL,
+    timestamp TEXT NOT NULL,
+    pool_id TEXT NOT NULL,
+    project TEXT NOT NULL,
+    symbol TEXT NOT NULL,
+    chain TEXT NOT NULL,
+    trigger_type TEXT NOT NULL,
+    severity TEXT NOT NULL,
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    metrics_json TEXT NOT NULL,
+    dispatched_channels TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_alerts_time ON alert_events(timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_alerts_severity ON alert_events(severity);
 """
 
 

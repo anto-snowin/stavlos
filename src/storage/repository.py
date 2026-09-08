@@ -385,4 +385,59 @@ class YieldRepository:
             cursor = conn.execute(query, params)
             return [dict(row) for row in cursor.fetchall()]
 
+    def save_alert_event(self, event: Any) -> None:
+        """Persists a detected alert event into alert_events table."""
+        query = """
+        INSERT INTO alert_events (
+            event_id, timestamp, pool_id, project, symbol, chain,
+            trigger_type, severity, title, message, metrics_json, dispatched_channels
+        ) VALUES (
+            :event_id, :timestamp, :pool_id, :project, :symbol, :chain,
+            :trigger_type, :severity, :title, :message, :metrics_json, :dispatched_channels
+        );
+        """
+        metrics_str = json.dumps(event.metrics) if hasattr(event, "metrics") else "{}"
+        channels_str = ",".join(event.dispatched_channels) if hasattr(event, "dispatched_channels") else ""
+
+        with self.db.get_connection() as conn:
+            conn.execute(
+                query,
+                {
+                    "event_id": event.event_id,
+                    "timestamp": event.timestamp.isoformat(),
+                    "pool_id": event.pool_id,
+                    "project": event.project,
+                    "symbol": event.symbol,
+                    "chain": event.chain,
+                    "trigger_type": event.trigger_type.value if hasattr(event.trigger_type, "value") else str(event.trigger_type),
+                    "severity": event.severity.value if hasattr(event.severity, "value") else str(event.severity),
+                    "title": event.title,
+                    "message": event.message,
+                    "metrics_json": metrics_str,
+                    "dispatched_channels": channels_str,
+                },
+            )
+            conn.commit()
+
+    def get_recent_alert_events(self, limit: int = 50) -> list[dict[str, Any]]:
+        """Retrieves chronological alert events."""
+        query = """
+        SELECT * FROM alert_events
+        ORDER BY timestamp DESC
+        LIMIT :limit;
+        """
+        with self.db.get_connection() as conn:
+            cursor = conn.execute(query, {"limit": limit})
+            rows = []
+            for r in cursor.fetchall():
+                d = dict(r)
+                if d.get("metrics_json"):
+                    try:
+                        d["metrics"] = json.loads(d["metrics_json"])
+                    except Exception:
+                        d["metrics"] = {}
+                rows.append(d)
+            return rows
+
+
 
