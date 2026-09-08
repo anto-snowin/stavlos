@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Data & logs (uncomment if you wish to exclude local DB)
+# data/*.db
