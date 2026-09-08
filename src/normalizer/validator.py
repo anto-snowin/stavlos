@@ -121,6 +121,7 @@ class PoolNormalizer:
                     il_risk=str(raw.ilRisk or "no"),
                     mu=float(raw.mu) if raw.mu is not None else None,
                     sigma=float(raw.sigma) if raw.sigma is not None else None,
+                    count=int(raw.count) if raw.count is not None else None,
                     apy_pct_1d=float(raw.apyPct1D) if raw.apyPct1D is not None else None,
                     apy_pct_7d=float(raw.apyPct7D) if raw.apyPct7D is not None else None,
                     apy_pct_30d=float(raw.apyPct30D) if raw.apyPct30D is not None else None,

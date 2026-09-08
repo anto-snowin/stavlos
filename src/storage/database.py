@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS pool_snapshots (
     il_risk TEXT DEFAULT 'no',
     mu REAL,
     sigma REAL,
+    count INTEGER,
     apy_pct_1d REAL,
     apy_pct_7d REAL,
     apy_pct_30d REAL,
@@ -53,6 +54,35 @@ CREATE TABLE IF NOT EXISTS pool_snapshots (
 
 CREATE INDEX IF NOT EXISTS idx_snapshots_pool_time ON pool_snapshots(pool_id, timestamp);
 CREATE INDEX IF NOT EXISTS idx_snapshots_time ON pool_snapshots(timestamp);
+
+CREATE TABLE IF NOT EXISTS pool_scores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pool_id TEXT NOT NULL,
+    scored_at TEXT NOT NULL,
+    chain TEXT NOT NULL,
+    project TEXT NOT NULL,
+    symbol TEXT NOT NULL,
+    headline_apy REAL NOT NULL,
+    rolling_30d_avg_apy REAL NOT NULL,
+    rolling_30d_volatility REAL,
+    tvl_usd REAL NOT NULL,
+    pool_age_days INTEGER,
+    tvl_score REAL NOT NULL,
+    age_score REAL NOT NULL,
+    volatility_score REAL NOT NULL,
+    chain_risk_score REAL NOT NULL,
+    bridge_score REAL NOT NULL,
+    risk_multiplier REAL NOT NULL,
+    composite_score REAL NOT NULL,
+    risk_adjusted_apy REAL NOT NULL,
+    explanation TEXT NOT NULL,
+    UNIQUE(pool_id, scored_at),
+    FOREIGN KEY(pool_id) REFERENCES pools(pool_id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_scores_composite ON pool_scores(composite_score DESC);
+CREATE INDEX IF NOT EXISTS idx_scores_time ON pool_scores(scored_at);
+CREATE INDEX IF NOT EXISTS idx_scores_pool ON pool_scores(pool_id);
 
 CREATE TABLE IF NOT EXISTS ingestion_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,7 +116,7 @@ class DatabaseManager:
             self._shared_memory_conn.row_factory = sqlite3.Row
 
     def initialize_schema(self) -> None:
-        """Executes DDL to guarantee tables and indices exist."""
+        """Executes DDL to guarantee tables, indices, and schema migrations exist."""
         if isinstance(self.db_path, Path):
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -95,6 +125,12 @@ class DatabaseManager:
                 conn.execute("PRAGMA journal_mode = WAL;")
                 conn.execute("PRAGMA synchronous = NORMAL;")
             conn.executescript(SCHEMA_SQL)
+
+            # Migration: Ensure count column exists in pool_snapshots
+            columns = [row["name"] for row in conn.execute("PRAGMA table_info(pool_snapshots);").fetchall()]
+            if "count" not in columns:
+                conn.execute("ALTER TABLE pool_snapshots ADD COLUMN count INTEGER;")
+
             conn.commit()
         logger.info("Database schema initialized at %s", self.db_path)
 

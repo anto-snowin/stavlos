@@ -58,7 +58,22 @@ Custom options:
 python -m src.cli.ingest --min-tvl 25000000 --db-path data/yields.db --symbols USDC,USDT,DAI,USDS,USDE
 ```
 
-### 3. Run Automated Tests
+### 3. Run Risk Scoring Engine (Phase 2)
+Evaluate risk-adjusted scores across the 5 penalty dimensions:
+```bash
+python -m src.cli.score
+```
+
+Custom options:
+```bash
+# Evaluate with Arbitrum as home chain and display top 15
+python -m src.cli.score --home-chain Arbitrum --limit 15
+
+# Output JSON format
+python -m src.cli.score --json
+```
+
+### 4. Run Automated Tests
 ```bash
 python -m pytest -v
 ```
@@ -69,8 +84,8 @@ python -m pytest -v
 
 - [x] **Phase 0 — Scope & Architecture**: Written architecture document (`docs/architecture.md`), Mermaid sequence & component diagrams, modular repository scaffolding.
 - [x] **Phase 1 — Data Ingestion Layer**: Resilient DeFiLlama client with retries, Pydantic normalizer with $\ge \$20\text{M}$ TVL and stablecoin filtering, idempotent SQLite time-series storage, CLI runner, and 11 unit tests.
-- [ ] **Phase 2 — Risk Scoring Model** (Next)
-- [ ] **Phase 3 — Backtesting Engine**
+- [x] **Phase 2 — Risk Scoring Model**: Pure stateless scoring engine penalizing low TVL, short protocol age, 30d APY volatility, chain risk tiers, and bridge friction; deterministic plain-English explanations; CLI table generator; 18 unit tests.
+- [ ] **Phase 3 — Backtesting Engine** (Next)
 - [ ] **Phase 4 — Dashboard (Next.js)**
 - [ ] **Phase 5 — Alerting**
 - [ ] **Phase 6 — Portfolio Positioning**

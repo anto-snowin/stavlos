@@ -73,10 +73,43 @@ class NormalizedSnapshot(BaseModel):
     il_risk: str = Field(default="no")
     mu: float | None = Field(default=None)
     sigma: float | None = Field(default=None)
+    count: int | None = Field(default=None, description="Days of historical tracking / age in days")
     apy_pct_1d: float | None = Field(default=None)
     apy_pct_7d: float | None = Field(default=None)
     apy_pct_30d: float | None = Field(default=None)
     apy_mean_30d: float | None = Field(default=None)
+
+
+class PoolRiskScore(BaseModel):
+    """
+    Evaluated risk-adjusted score and breakdown for a stablecoin pool.
+    Pure output of the Risk Scoring Engine.
+    """
+    model_config = ConfigDict(frozen=True)
+
+    pool_id: str = Field(..., description="Canonical pool UUID")
+    chain: str = Field(..., description="Blockchain name")
+    project: str = Field(..., description="Protocol/project name")
+    symbol: str = Field(..., description="Stablecoin symbol")
+    headline_apy: float = Field(..., description="Current net headline APY (%)")
+    rolling_30d_avg_apy: float = Field(..., description="Trailing 30-day average APY (%)")
+    rolling_30d_volatility: float | None = Field(default=None, description="Trailing 30-day sigma/volatility")
+    tvl_usd: float = Field(..., ge=0.0, description="Total Value Locked in USD")
+    pool_age_days: int | None = Field(default=None, description="Age in days from observation count")
+
+    # Risk sub-components [0.0 - 1.0]
+    tvl_score: float = Field(..., ge=0.0, le=1.0, description="TVL depth factor")
+    age_score: float = Field(..., ge=0.0, le=1.0, description="Protocol/pool maturity factor")
+    volatility_score: float = Field(..., ge=0.0, le=1.0, description="Yield stability factor")
+    chain_risk_score: float = Field(..., ge=0.0, le=1.0, description="Chain consensus & security factor")
+    bridge_score: float = Field(..., ge=0.0, le=1.0, description="Bridge friction/risk factor from home chain")
+
+    # Composite metrics
+    risk_multiplier: float = Field(..., ge=0.0, le=1.0, description="Aggregate risk weight (0.0-1.0)")
+    composite_score: float = Field(..., ge=0.0, le=100.0, description="Composite risk-adjusted score (0-100)")
+    risk_adjusted_apy: float = Field(..., description="Risk-adjusted expected yield (%)")
+    explanation: str = Field(..., description="Deterministic plain-English rationale")
+    scored_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class IngestionRunSummary(BaseModel):
@@ -90,3 +123,4 @@ class IngestionRunSummary(BaseModel):
     duration_seconds: float
     success: bool
     error_message: str | None = None
+

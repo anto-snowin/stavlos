@@ -1,4 +1,14 @@
 """
-Risk Scoring Engine package (Phase 2).
-Stateless computation layer evaluating TVL fragility, protocol age, APY volatility, and chain risk.
+Risk Scoring Engine package.
 """
+from src.scoring.config import (
+    DEFAULT_CHAIN_RISK_TIERS,
+    ScoringConfig,
+)
+from src.scoring.engine import RiskScorer
+
+__all__ = [
+    "DEFAULT_CHAIN_RISK_TIERS",
+    "ScoringConfig",
+    "RiskScorer",
+]
