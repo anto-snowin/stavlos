@@ -2,7 +2,7 @@
 
 An institutional-grade, simulation-only DeFi yield analytics platform designed for quant, fintech, and data engineering portfolios. It tracks, normalizes, risk-adjusts, and simulates cross-chain stablecoin lending yields (USDC, USDT, DAI, USDS, USDe) across Aave, Compound, Morpho, Spark, and other major protocols.
 
-> **Architectural Constraint**: This system is strictly analytical and advisory. It contains **no private keys, no Web3 wallet connection, and no transaction broadcast mechanisms**. It cannot sign or move live capital.
+> **Architectural Constraint**: This system is strictly analytical, advisory, and non-custodial. Phase 7 Stage A provides **read-only multi-chain balance inspection** via standard EIP-1193 / JSON-RPC (`eth_call`). The system contains **zero private keys, zero signature requests, and zero transaction broadcast mechanisms**. It cannot sign transactions or move capital.
 
 ---
 
@@ -139,6 +139,7 @@ python -m pytest -v
 - [x] **Phase 4 — Dashboard (Next.js)**: Full-stack institutional dashboard; FastAPI analytical gateway; sortable ranked pool table with quantitative audit drawers; Recharts historical APY trends; interactive 180d backtest visualizer; persistent non-execution disclaimer banner.
 - [x] **Phase 5 — Alerting**: Automated monitoring service detecting TVL contractions ($\le -15\%$), APY surges ($\ge +5\%$), and risk grade drops; multi-channel dispatchers (Console, SQLite DB, Webhook); synthetic market shock test suite with 35 passing tests.
 - [x] **Phase 6 — Portfolio Positioning**: Comprehensive one-page engineering and quantitative portfolio write-up documenting technical demonstrations, real-world limitations, and career positioning ([`docs/portfolio_writeup.md`](file:///d:/stavlos/docs/portfolio_writeup.md)).
+- [x] **Phase 7 — Read-Only Multi-Chain Wallet Integration (Stage A)**: Non-custodial Web3 connector reading live stablecoin balances (`USDC`, `USDT`, `DAI`, `USDS`, `USDe`) across Ethereum, Arbitrum, Optimism, Base, and Sepolia via Viem JSON-RPC `eth_call`. Automatically cross-references idle wallet balances against Phase 2 risk-adjusted pools, computing real-time APY pickup while enforcing zero fund movement or private key access.
 
 ---
 

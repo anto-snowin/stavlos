@@ -46,15 +46,57 @@ High headline APY in DeFi is almost always compensation for unpriced risks. The 
   - Rate Squeezes (APY spike $\ge +5\%$).
   - Institutional Degradation (Score floor breach $<40/100$).
 
+### E. Non-Custodial Read-Only Multi-Chain Wallet Integration (Phase 7 Stage A)
+The platform integrates browser-based Web3 wallet connectivity strictly for **read-only portfolio telemetry and yield opportunity discovery**, without custody risk or transactional capabilities.
+
+#### Under the Hood: EIP-1193, `eth_requestAccounts`, and `eth_call`
+Modern Web3 libraries (e.g. Wagmi, Viem) wrap standard browser primitives and JSON-RPC specifications. Here is how the system operates under the hood:
+
+1. **EIP-1193 Injected Provider Protocol (`window.ethereum`)**:
+   - Modern browser wallets (MetaMask, Rabby, Rainbow, Coinbase Wallet) inject an EIP-1193 compliant JavaScript object at `window.ethereum`.
+   - The interface standardizes interaction via a single method: `ethereum.request({ method: string, params?: Array<any> | Record<string, any> })`.
+   - The application detects the presence of this provider without embedding any wallet software, SDKs with telemetry, or private key generation code.
+
+2. **Account Discovery via `eth_requestAccounts`**:
+   - When the user clicks **Connect Wallet**, the application issues:
+     ```javascript
+     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+     ```
+   - This prompts the browser wallet extension to display its permission modal. The user explicitly approves granting read access to their public hexadecimal account address (e.g., `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`).
+   - **Crucial Non-Custodial Guarantee**: At no point in this handshake is the private key, mnemonic seed phrase, or signature capability exposed to the application. The application runtime only ever receives the public address string.
+
+3. **Cross-Chain Read-Only Balance Queries via `eth_call` & Public JSON-RPC**:
+   - To query token balances across 5 distinct chains (Ethereum Mainnet, Arbitrum, Optimism, Base, Sepolia), the application **does not force the user to switch networks** in their wallet.
+   - Instead, the application instantiates stateless, public `viem` clients configured with decentralized public JSON-RPC endpoints:
+     ```typescript
+     const client = createPublicClient({ chain, transport: http() });
+     const rawBalance = await client.readContract({
+       address: tokenContractAddress,
+       abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
+       functionName: 'balanceOf',
+       args: [userAddress],
+     });
+     ```
+   - Under the hood, this compiles to a raw JSON-RPC `eth_call` HTTP request:
+     - Method: `"eth_call"`
+     - Parameters: `[{ to: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", data: "0x70a08231000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045" }, "latest"]`
+     - The function selector `0x70a08231` corresponds to the first 4 bytes of `keccak256("balanceOf(address)")`.
+     - Because `eth_call` executes entirely within the virtual machine state of the remote node without creating an on-chain transaction or state mutation, **it consumes 0 gas, requires 0 signatures, and cannot move funds**.
+
+4. **Yield Cross-Referencing & Opportunity Detection**:
+   - Balances across all chains are mapped and cross-referenced against the active Phase 2 scoring ranking (`GET /api/v1/pools/ranked`).
+   - If the user holds idle capital (e.g. 158.02 USDC on Arbitrum yielding 0%), the engine matches the asset with the highest risk-adjusted target pool (e.g. Accountable Monad at +11.48% APY or Sparklend USDS at 16.0% APY) and computes the exact annual yield pickup delta.
+   - Disconnecting resets the in-memory React state, with zero persistent storage of address telemetry.
+
 ---
 
 ## 2. Real-World Limitations & Engineering Trade-Offs
 
 Honesty about system boundaries is what separates senior engineering from hype. The platform makes explicit architectural trade-offs:
 
-1. **Simulation-Only / Zero Live Execution by Design**:
-   - The platform contains **zero private keys, no Web3 wallet providers, and no smart contract execution capabilities**.
-   - *Rationale*: Custody management, MEV protection, private key HSMs, and smart contract execution introduce severe operational and legal security surfaces. Separating analytical modeling from transaction execution allows deep quantitative iteration without custody risk.
+1. **Non-Custodial / Read-Only by Design (Stage A)**:
+   - The platform strictly separates **analysis from custody**. It reads balances via public RPCs and `eth_call` but contains **zero transaction construction, zero smart contract approvals (`ERC-20 approve`), and zero broadcast facilities**.
+   - *Rationale*: Custody management, MEV protection, private key HSMs, and transaction signing introduce extreme attack surfaces and regulatory scrutiny. Providing institutional clarity before any capital is moved is the core mission. Stage B (deposit transaction construction) remains gated until smart contracts undergo formal audits.
 2. **Simplified Slippage & Constant Liquidity Depth**:
    - The backtester models capital hops assuming market depth can absorb portfolio reallocation at a fixed $0.05\%$ bridge fee without market impact.
    - *Real-World Impact*: Allocating $\$100\text{M}$ into a $\$40\text{M}$ pool would instantly dilute the APY down to near zero. A production execution system would require dynamic AMM bonding curve integration.

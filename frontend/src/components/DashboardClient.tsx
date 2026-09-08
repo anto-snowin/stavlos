@@ -6,6 +6,7 @@ import { KpiMetrics } from "@/components/KpiMetrics";
 import { RankedPoolsTable } from "@/components/RankedPoolsTable";
 import { HistoricalYieldChart } from "@/components/HistoricalYieldChart";
 import { BacktestSection } from "@/components/BacktestSection";
+import { WalletPortfolioSummary } from "@/components/WalletPortfolioSummary";
 import { PoolRiskScore, BacktestResult, SystemHealth } from "@/types";
 import { Layers, TrendingUp, ShieldCheck, RefreshCw, BookOpen, AlertTriangle, CheckCircle2, Award } from "lucide-react";
 
@@ -54,6 +55,9 @@ export const DashboardClient: React.FC<DashboardClientProps> = ({
         selectedHomeChain={homeChain}
         onHomeChainChange={handleHomeChainChange}
       />
+
+      {/* Connected Wallet Portfolio & Yield Pickup Intelligence */}
+      <WalletPortfolioSummary pools={pools} />
 
       {/* KPI Cards */}
       <KpiMetrics pools={pools} backtest={backtest} />
