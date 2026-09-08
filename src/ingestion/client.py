@@ -94,3 +94,30 @@ class DeFiLlamaClient:
         except Exception as e:
             logger.error("Async fetch failed: %s", e)
             raise IngestionError(f"Async fetch failed: {e}") from e
+
+    @retry(
+        reraise=True,
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1.5, min=2.0, max=10.0),
+        retry=retry_if_exception_type((httpx.RequestError, httpx.HTTPStatusError)),
+        before_sleep=before_sleep_log(logger, logging.WARNING),
+    )
+    def fetch_pool_chart_sync(self, pool_id: str) -> list[dict[str, Any]]:
+        """
+        Fetches full historical daily APY and TVL chart series for a specific pool.
+        Endpoint: https://yields.llama.fi/chart/{pool_id}
+        """
+        chart_url = f"https://yields.llama.fi/chart/{pool_id}"
+        logger.debug("Fetching historical chart for pool %s", pool_id)
+        try:
+            with httpx.Client(timeout=self.timeout, headers=self.headers) as client:
+                response = client.get(chart_url)
+                response.raise_for_status()
+                payload = response.json()
+                data = payload.get("data", [])
+                logger.debug("Fetched %d historical chart points for pool %s", len(data), pool_id)
+                return data
+        except Exception as e:
+            logger.warning("Failed fetching historical chart for pool %s: %s", pool_id, e)
+            raise IngestionError(f"Failed fetching chart for {pool_id}: {e}") from e
+

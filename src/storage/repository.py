@@ -292,3 +292,97 @@ class YieldRepository:
             cursor = conn.execute(query, {"pool_id": pool_id, "limit": limit})
             return [dict(row) for row in cursor.fetchall()]
 
+    def backfill_historical_chart_data(
+        self, pool_id: str, chart_records: list[dict[str, Any]]
+    ) -> int:
+        """
+        Idempotently inserts historical daily snapshots from DeFiLlama chart data.
+        Normalizes timestamps to daily midnight UTC (YYYY-MM-DDT00:00:00+00:00).
+        """
+        if not chart_records:
+            return 0
+
+        insert_query = """
+        INSERT INTO pool_snapshots (
+            pool_id, timestamp, tvl_usd, apy, apy_base, apy_reward, il_risk
+        ) VALUES (
+            :pool_id, :timestamp, :tvl_usd, :apy, :apy_base, :apy_reward, 'no'
+        )
+        ON CONFLICT(pool_id, timestamp) DO UPDATE SET
+            tvl_usd = excluded.tvl_usd,
+            apy = excluded.apy,
+            apy_base = excluded.apy_base,
+            apy_reward = excluded.apy_reward;
+        """
+
+        records = []
+        for item in chart_records:
+            try:
+                raw_ts = item.get("timestamp")
+                if not raw_ts:
+                    continue
+                # Parse ISO timestamp
+                if isinstance(raw_ts, str):
+                    dt = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                elif isinstance(raw_ts, (int, float)):
+                    dt = datetime.fromtimestamp(raw_ts, tz=timezone.utc)
+                else:
+                    continue
+
+                daily_ts = dt.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+                tvl = float(item.get("tvlUsd") or 0.0)
+                apy = float(item.get("apy") or 0.0)
+
+                records.append({
+                    "pool_id": pool_id,
+                    "timestamp": daily_ts,
+                    "tvl_usd": tvl,
+                    "apy": apy,
+                    "apy_base": float(item.get("apyBase")) if item.get("apyBase") is not None else None,
+                    "apy_reward": float(item.get("apyReward")) if item.get("apyReward") is not None else None,
+                })
+            except Exception as e:
+                logger.debug("Skipping invalid chart point for pool %s: %s", pool_id, e)
+
+        if not records:
+            return 0
+
+        with self.db.get_connection() as conn:
+            conn.executemany(insert_query, records)
+            conn.commit()
+
+        logger.info("Backfilled %d historical points for pool %s", len(records), pool_id)
+        return len(records)
+
+    def get_daily_time_series(
+        self, pool_ids: list[str], start_date: str | None = None
+    ) -> list[dict[str, Any]]:
+        """
+        Retrieves synchronized daily time-series records for specified pools.
+        Returns rows sorted chronologically by timestamp, then pool_id.
+        """
+        if not pool_ids:
+            return []
+
+        placeholders = ",".join("?" for _ in pool_ids)
+        query = f"""
+        SELECT 
+            s.timestamp, s.pool_id, s.apy, s.tvl_usd,
+            p.chain, p.project, p.symbol
+        FROM pool_snapshots s
+        JOIN pools p ON s.pool_id = p.pool_id
+        WHERE s.pool_id IN ({placeholders})
+        """
+        params: list[Any] = list(pool_ids)
+
+        if start_date:
+            query += " AND s.timestamp >= ?"
+            params.append(start_date)
+
+        query += " ORDER BY s.timestamp ASC, s.tvl_usd DESC;"
+
+        with self.db.get_connection() as conn:
+            cursor = conn.execute(query, params)
+            return [dict(row) for row in cursor.fetchall()]
+
+

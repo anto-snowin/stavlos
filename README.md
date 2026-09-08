@@ -73,7 +73,25 @@ python -m src.cli.score --home-chain Arbitrum --limit 15
 python -m src.cli.score --json
 ```
 
-### 4. Run Automated Tests
+### 4. Run Backtesting Engine (Phase 3)
+Replay historical multi-month time-series and simulate capital allocation vs. static Aave USDC holding:
+```bash
+python -m src.cli.backtest --days 180 --rebalance-freq 7 --min-holding 7 --churn-penalty 0.75
+```
+
+Custom options:
+```bash
+# Sync multi-month daily history from DeFiLlama first
+python -m src.cli.backtest --sync-history --days 180
+
+# Save daily equity curve to CSV
+python -m src.cli.backtest --days 180 --save-csv data/equity_curve.csv
+
+# Output full simulation statistics as JSON
+python -m src.cli.backtest --json
+```
+
+### 5. Run Automated Tests
 ```bash
 python -m pytest -v
 ```
@@ -85,7 +103,7 @@ python -m pytest -v
 - [x] **Phase 0 — Scope & Architecture**: Written architecture document (`docs/architecture.md`), Mermaid sequence & component diagrams, modular repository scaffolding.
 - [x] **Phase 1 — Data Ingestion Layer**: Resilient DeFiLlama client with retries, Pydantic normalizer with $\ge \$20\text{M}$ TVL and stablecoin filtering, idempotent SQLite time-series storage, CLI runner, and 11 unit tests.
 - [x] **Phase 2 — Risk Scoring Model**: Pure stateless scoring engine penalizing low TVL, short protocol age, 30d APY volatility, chain risk tiers, and bridge friction; deterministic plain-English explanations; CLI table generator; 18 unit tests.
-- [ ] **Phase 3 — Backtesting Engine** (Next)
-- [ ] **Phase 4 — Dashboard (Next.js)**
+- [x] **Phase 3 — Backtesting Engine**: Replays historical yields; models gas friction, bridge fees, minimum lockup, and churn hurdles; outputs side-by-side performance reports, trade logs, and ASCII equity curves; 23 unit tests.
+- [ ] **Phase 4 — Dashboard (Next.js)** (Next)
 - [ ] **Phase 5 — Alerting**
 - [ ] **Phase 6 — Portfolio Positioning**
