@@ -138,5 +138,22 @@ python -m pytest -v
 - [x] **Phase 3 — Backtesting Engine**: Replays historical yields; models gas friction, bridge fees, minimum lockup, and churn hurdles; outputs side-by-side performance reports, trade logs, and ASCII equity curves; 23 unit tests.
 - [x] **Phase 4 — Dashboard (Next.js)**: Full-stack institutional dashboard; FastAPI analytical gateway; sortable ranked pool table with quantitative audit drawers; Recharts historical APY trends; interactive 180d backtest visualizer; persistent non-execution disclaimer banner.
 - [x] **Phase 5 — Alerting**: Automated monitoring service detecting TVL contractions ($\le -15\%$), APY surges ($\ge +5\%$), and risk grade drops; multi-channel dispatchers (Console, SQLite DB, Webhook); synthetic market shock test suite with 35 passing tests.
-- [ ] **Phase 6 — Portfolio Positioning**
+- [x] **Phase 6 — Portfolio Positioning**: Comprehensive one-page engineering and quantitative portfolio write-up documenting technical demonstrations, real-world limitations, and career positioning ([`docs/portfolio_writeup.md`](file:///d:/stavlos/docs/portfolio_writeup.md)).
+
+---
+
+## Portfolio Case Study & Technical Highlights
+
+For full details, read the comprehensive case study in [`docs/portfolio_writeup.md`](file:///d:/stavlos/docs/portfolio_writeup.md).
+
+### 1. What This Demonstrates Technically
+- **Production Data Engineering**: Resilient HTTP client with jittered exponential backoff via `tenacity`, strict schema validation via Pydantic v2, and an idempotent WAL-mode SQLite database storing thousands of daily yield observations.
+- **Quantitative Risk Modeling**: A 5-factor penalty engine decomposing nominal APYs by liquidity depth, protocol age, 30d APY volatility drag, settlement security tiers, and bridge friction, producing deterministic plain-English explanations.
+- **Empirical Backtesting Rigor**: 180-day historical simulation modeling fixed gas costs, bridge slippage, 7-day lockups, and a +0.75% churn hurdle. Validated that active rotation generated **+0.53% net alpha** over the static Aave USDC benchmark across 3 hops with $70 total fees.
+- **Full-Stack Architecture**: Stateless analytical engine, FastAPI microservice, and a responsive Next.js 14 App Router dashboard with interactive Recharts visualizations and automated advisory alerts.
+
+### 2. Real-World Limitations & Engineering Trade-Offs
+- **Simulation-Only by Design**: Contains no private keys or transaction signing mechanisms, isolating analytical modeling from custody risk.
+- **Constant Slippage Assumption**: Backtest assumes $0.05\%$ fixed bridge slippage without dynamic liquidity impact.
+- **Daily Resolution**: Macro daily snapshots capture long-term trends but do not capture intraday flash-loan or oracle exploits.
 
