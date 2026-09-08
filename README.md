@@ -91,7 +91,24 @@ python -m src.cli.backtest --days 180 --save-csv data/equity_curve.csv
 python -m src.cli.backtest --json
 ```
 
-### 5. Run Automated Tests
+### 5. Run Web Dashboard (Phase 4)
+Start the FastAPI backend and the Next.js App Router frontend:
+
+1. **Start the FastAPI Backend**:
+```bash
+python -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+```
+
+2. **Start the Next.js Frontend**:
+```bash
+cd frontend
+npm run dev
+# Or run the optimized production bundle:
+npm start
+```
+Open [http://localhost:3000](http://localhost:3000) to view the live dashboard.
+
+### 6. Run Automated Tests
 ```bash
 python -m pytest -v
 ```
@@ -104,6 +121,6 @@ python -m pytest -v
 - [x] **Phase 1 — Data Ingestion Layer**: Resilient DeFiLlama client with retries, Pydantic normalizer with $\ge \$20\text{M}$ TVL and stablecoin filtering, idempotent SQLite time-series storage, CLI runner, and 11 unit tests.
 - [x] **Phase 2 — Risk Scoring Model**: Pure stateless scoring engine penalizing low TVL, short protocol age, 30d APY volatility, chain risk tiers, and bridge friction; deterministic plain-English explanations; CLI table generator; 18 unit tests.
 - [x] **Phase 3 — Backtesting Engine**: Replays historical yields; models gas friction, bridge fees, minimum lockup, and churn hurdles; outputs side-by-side performance reports, trade logs, and ASCII equity curves; 23 unit tests.
-- [ ] **Phase 4 — Dashboard (Next.js)** (Next)
-- [ ] **Phase 5 — Alerting**
+- [x] **Phase 4 — Dashboard (Next.js)**: Full-stack institutional dashboard; FastAPI analytical gateway; sortable ranked pool table with quantitative audit drawers; Recharts historical APY trends; interactive 180d backtest visualizer; persistent non-execution disclaimer banner.
+- [ ] **Phase 5 — Alerting** (Next)
 - [ ] **Phase 6 — Portfolio Positioning**
