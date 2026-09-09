@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { TrendingUp, ShieldAlert, DollarSign, Activity, Percent } from "lucide-react";
 import { PoolRiskScore, BacktestResult } from "@/types";
 
 interface KpiMetricsProps {
@@ -9,8 +8,8 @@ interface KpiMetricsProps {
   backtest: BacktestResult | null;
 }
 
-/** Animate a number from 0 to target */
-function useCountUp(target: number, duration = 800) {
+/** Animate a numeric value from 0 to target */
+function useCountUp(target: number, duration = 650) {
   const [value, setValue] = useState(0);
   const ref = useRef<number>(0);
 
@@ -52,105 +51,129 @@ export const KpiMetrics: React.FC<KpiMetricsProps> = ({ pools, backtest }) => {
   const animatedAvg = useCountUp(avgScore);
 
   return (
-    <div className="my-6 stagger">
-      {/* Row 1: Featured card + Alpha — 2 column asymmetric */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 mb-3">
-        {/* Featured: Top Pool — spans 3 cols */}
-        <div className="lg:col-span-3 card-featured p-5 animate-in">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider mb-2">
-                Top Risk-Adjusted Opportunity
-              </div>
-              <div className="text-3xl font-bold text-white font-mono tracking-tight animate-count">
-                {topPool ? `${animatedScore.toFixed(1)}` : "—"}
-                <span className="text-lg text-[var(--text-tertiary)] font-normal">/100</span>
-              </div>
-              <p className="text-sm text-accent-teal mt-1.5 font-medium">
-                {topPool ? `${topPool.project}` : "Loading…"}
-                {topPool && (
-                  <span className="text-[var(--text-tertiary)] font-normal">
-                    {" "}· {topPool.symbol} · {topPool.chain}
-                  </span>
-                )}
-              </p>
+    <section className="my-6 space-y-3 stagger-panels" aria-label="Key Performance Indicators">
+      {/* ─── Hero Panel: Single Top-Ranked Pick (Copper Accent, Sharp Glass) ─── */}
+      <div className="glass-hero p-6 sm:p-7 animate-rack-focus relative overflow-hidden">
+        {/* Subtle copper corner accent line */}
+        <div className="absolute top-0 left-0 w-24 h-[2px] bg-[#D9A24B]" />
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          {/* Left info */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2.5">
+              <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border border-[#D9A24B]/30 bg-[#D9A24B]/10 text-[#D9A24B] font-semibold">
+                Rank #1 Recommendation
+              </span>
+              <span className="text-xs text-[var(--text-tertiary)] font-mono">
+                Sharp Glass · Highest Risk-Adjusted Confidence
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-baseline gap-3 pt-1">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white capitalize">
+                {topPool ? topPool.project : "Loading protocol…"}
+              </h2>
               {topPool && (
-                <p className="text-[11px] text-[var(--text-muted)] mt-1">
-                  {topPool.headline_apy.toFixed(2)}% headline · ${(topPool.tvl_usd / 1e6).toFixed(0)}M TVL
-                </p>
+                <span className="text-sm font-mono text-[var(--text-secondary)]">
+                  {topPool.symbol} · {topPool.chain}
+                </span>
               )}
             </div>
-            <div className="p-2 rounded-lg bg-accent-teal/8">
-              <TrendingUp className="w-5 h-5 text-accent-teal" />
-            </div>
-          </div>
-        </div>
 
-        {/* Alpha card — spans 2 cols */}
-        <div className="lg:col-span-2 card-metric accent-emerald p-5 animate-in">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider mb-2">
-                180-Day Net Alpha
-              </div>
-              <div className="text-3xl font-bold text-accent-emerald font-mono tracking-tight animate-count">
-                +{animatedAlpha.toFixed(2)}%
-              </div>
-              <p className="text-[12px] text-[var(--text-muted)] mt-1.5">
-                Net of all gas & bridge fees
+            {topPool && (
+              <p className="text-xs text-[var(--text-muted)] max-w-xl leading-relaxed">
+                {topPool.explanation}
               </p>
+            )}
+          </div>
+
+          {/* Right metrics: Score & Yield */}
+          <div className="flex items-center gap-6 sm:gap-8 shrink-0 border-t lg:border-t-0 lg:border-l border-[var(--glass-border)] pt-4 lg:pt-0 lg:pl-8">
+            {/* Risk-Adjusted Score */}
+            <div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] mb-1">
+                Risk Score
+              </div>
+              <div className="text-3xl sm:text-4xl font-bold font-mono text-white tabular-nums tracking-tight">
+                {topPool ? animatedScore.toFixed(1) : "—"}
+                <span className="text-base font-normal text-[var(--text-tertiary)]">/100</span>
+              </div>
+              <div className="text-[11px] font-mono text-[#D9A24B] mt-0.5 font-medium">
+                Grade A · Near-clear
+              </div>
             </div>
-            <div className="p-2 rounded-lg bg-accent-emerald/8">
-              <Percent className="w-5 h-5 text-accent-emerald" />
+
+            {/* Headline APY */}
+            <div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] mb-1">
+                Headline APY
+              </div>
+              <div className="text-3xl sm:text-4xl font-bold font-mono text-[#35C48F] tabular-nums tracking-tight">
+                {topPool ? `${topPool.headline_apy.toFixed(2)}%` : "—"}
+              </div>
+              <div className="text-[11px] font-mono text-[var(--text-tertiary)] mt-0.5">
+                {topPool ? `$${(topPool.tvl_usd / 1e6).toFixed(0)}M TVL` : "—"}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Row 2: Three even cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {/* Benchmark */}
-        <div className="card-metric accent-indigo p-4 animate-in">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">Aave USDC Benchmark</span>
-            <Activity className="w-3.5 h-3.5 text-accent-indigo" />
+      {/* ─── Supporting Metrics Strip: 4 Stated Facts (Near-Clear Glass, 6px Blur) ─── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* Metric 1: 180-Day Net Alpha */}
+        <div className="glass-metric animate-rack-focus">
+          <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+            180d Net Alpha
           </div>
-          <div className="text-2xl font-bold text-white font-mono tracking-tight">
-            {animatedBenchmark.toFixed(2)}%
+          <div className="text-xl sm:text-2xl font-bold font-mono text-[#35C48F] tabular-nums tracking-tight">
+            +{animatedAlpha.toFixed(2)}%
           </div>
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">
-            Ethereum L1 baseline yield
+          <p className="text-[11px] text-[var(--text-muted)] mt-1 font-sans">
+            Net of all gas & bridge friction
           </p>
         </div>
 
-        {/* TVL */}
-        <div className="card-metric accent-amber p-4 animate-in">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">Monitored Liquidity</span>
-            <DollarSign className="w-3.5 h-3.5 text-accent-amber" />
+        {/* Metric 2: Benchmark APY */}
+        <div className="glass-metric animate-rack-focus">
+          <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+            Aave USDC Baseline
           </div>
-          <div className="text-2xl font-bold text-white font-mono tracking-tight">
+          <div className="text-xl sm:text-2xl font-bold font-mono text-white tabular-nums tracking-tight">
+            {animatedBenchmark.toFixed(2)}%
+          </div>
+          <p className="text-[11px] text-[var(--text-muted)] mt-1 font-sans">
+            Ethereum L1 passive hold
+          </p>
+        </div>
+
+        {/* Metric 3: Monitored Liquidity */}
+        <div className="glass-metric animate-rack-focus">
+          <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+            Monitored TVL
+          </div>
+          <div className="text-xl sm:text-2xl font-bold font-mono text-white tabular-nums tracking-tight">
             ${animatedTvl.toFixed(2)}B
           </div>
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">
+          <p className="text-[11px] text-[var(--text-muted)] mt-1 font-sans">
             5 stablecoins · TVL ≥ $20M
           </p>
         </div>
 
-        {/* Avg Score */}
-        <div className="card-metric accent-violet p-4 animate-in">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">Universe Avg Score</span>
-            <ShieldAlert className="w-3.5 h-3.5 text-accent-violet" />
+        {/* Metric 4: Universe Avg Score */}
+        <div className="glass-metric animate-rack-focus">
+          <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
+            Universe Avg Score
           </div>
-          <div className="text-2xl font-bold text-white font-mono tracking-tight">
-            {animatedAvg.toFixed(1)}<span className="text-base text-[var(--text-tertiary)] font-normal">/100</span>
+          <div className="text-xl sm:text-2xl font-bold font-mono text-white tabular-nums tracking-tight">
+            {animatedAvg.toFixed(1)}
+            <span className="text-xs font-normal text-[var(--text-tertiary)]">/100</span>
           </div>
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">
-            Mean risk-adjusted grade
+          <p className="text-[11px] text-[var(--text-muted)] mt-1 font-sans">
+            Cross-chain mean risk grade
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

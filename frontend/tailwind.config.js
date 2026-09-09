@@ -13,54 +13,67 @@ module.exports = {
         mono: ['JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'monospace'],
       },
       colors: {
-        background: "#06090f",
-        surface: "#0a0f1a",
-        "surface-raised": "#111827",
-        "surface-overlay": "#1a2235",
-        primary: "#2dd4bf",
-        secondary: "#818cf8",
+        background: "#0D1321",
+        surface: "#16213E",
+        jade: {
+          DEFAULT: "#35C48F",
+          dim: "rgba(53, 196, 143, 0.12)",
+        },
+        copper: {
+          DEFAULT: "#D9A24B",
+          dim: "rgba(217, 162, 75, 0.12)",
+        },
+        alert: {
+          red: "#E5484D",
+          dim: "rgba(229, 72, 77, 0.12)",
+        },
+        glass: {
+          fill: "rgba(255, 255, 255, 0.06)",
+          hover: "rgba(255, 255, 255, 0.09)",
+          border: "rgba(255, 255, 255, 0.12)",
+          subtle: "rgba(255, 255, 255, 0.06)",
+        },
+        primary: "#35C48F",
+        secondary: "#94A3B8",
         accent: {
-          teal: "#2dd4bf",
+          teal: "#35C48F", // mapped to Jade
           cyan: "#22d3ee",
-          emerald: "#34d399",
-          rose: "#fb7185",
-          amber: "#fbbf24",
+          emerald: "#35C48F",
+          rose: "#E5484D", // mapped to Alert Red
+          amber: "#D9A24B", // mapped to Copper
           indigo: "#818cf8",
           violet: "#a78bfa",
         },
       },
       borderColor: {
-        subtle: "rgba(255, 255, 255, 0.04)",
-        default: "rgba(255, 255, 255, 0.07)",
-        emphasis: "rgba(255, 255, 255, 0.12)",
+        glass: "rgba(255, 255, 255, 0.12)",
+        "glass-subtle": "rgba(255, 255, 255, 0.06)",
+        subtle: "rgba(255, 255, 255, 0.06)",
+        default: "rgba(255, 255, 255, 0.12)",
+        emphasis: "rgba(255, 255, 255, 0.18)",
       },
       animation: {
+        "rack-focus": "rackFocus 0.55s cubic-bezier(0.16, 1, 0.3, 1) both",
         "fade-in-up": "fadeInUp 0.4s ease-out both",
         "fade-in": "fadeIn 0.3s ease-out both",
-        "slide-right": "slideInRight 0.3s ease-out both",
         "count-up": "countUp 0.5s ease-out both",
-        "pulse-glow": "pulseGlow 2s ease-in-out infinite",
       },
       keyframes: {
+        rackFocus: {
+          "0%": { filter: "blur(18px)", opacity: "0.5", transform: "scale(0.99)" },
+          "100%": { filter: "blur(0px)", opacity: "1", transform: "scale(1)" },
+        },
         fadeInUp: {
-          from: { opacity: '0', transform: 'translateY(12px)' },
-          to: { opacity: '1', transform: 'translateY(0)' },
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
         fadeIn: {
-          from: { opacity: '0' },
-          to: { opacity: '1' },
-        },
-        slideInRight: {
-          from: { opacity: '0', transform: 'translateX(8px)' },
-          to: { opacity: '1', transform: 'translateX(0)' },
+          from: { opacity: "0" },
+          to: { opacity: "1" },
         },
         countUp: {
-          from: { opacity: '0', transform: 'translateY(4px)' },
-          to: { opacity: '1', transform: 'translateY(0)' },
-        },
-        pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 4px rgba(45, 212, 191, 0.3)' },
-          '50%': { boxShadow: '0 0 12px rgba(45, 212, 191, 0.5)' },
+          from: { opacity: "0", transform: "translateY(3px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
       },
     },

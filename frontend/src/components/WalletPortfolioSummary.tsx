@@ -3,27 +3,11 @@
 import React from "react";
 import { useWeb3 } from "@/providers/Web3Provider";
 import { PoolRiskScore } from "@/types";
-import {
-  Wallet,
-  ShieldCheck,
-  TrendingUp,
-  LogOut,
-  RefreshCw,
-} from "lucide-react";
+import { Wallet, ShieldCheck, TrendingUp, LogOut, RefreshCw } from "lucide-react";
 
 interface WalletPortfolioSummaryProps {
   pools: PoolRiskScore[];
 }
-
-const TOKEN_ACCENTS: Record<string, { border: string; text: string; bg: string }> = {
-  USDC: { border: "border-[#2775ca]/20", text: "text-[#5a9ddb]", bg: "bg-[#2775ca]/6" },
-  USDT: { border: "border-[#26a17b]/20", text: "text-[#4cc9a0]", bg: "bg-[#26a17b]/6" },
-  DAI: { border: "border-[#f5ac37]/20", text: "text-[#f5c563]", bg: "bg-[#f5ac37]/6" },
-  USDS: { border: "border-[#8b5cf6]/20", text: "text-[#a78bfa]", bg: "bg-[#8b5cf6]/6" },
-  USDe: { border: "border-[#2dd4bf]/20", text: "text-[#5ae8d5]", bg: "bg-[#2dd4bf]/6" },
-};
-
-const DEFAULT_ACCENT = { border: "border-[var(--border-subtle)]", text: "text-[var(--text-tertiary)]", bg: "bg-[var(--bg-surface-raised)]" };
 
 export const WalletPortfolioSummary: React.FC<WalletPortfolioSummaryProps> = ({ pools }) => {
   const {
@@ -46,52 +30,45 @@ export const WalletPortfolioSummary: React.FC<WalletPortfolioSummaryProps> = ({ 
   const topOpportunity = pools.length > 0 ? pools[0] : null;
 
   return (
-    <div className="card p-5 border-accent-teal/15 bg-gradient-to-b from-accent-teal/[0.02] to-transparent space-y-4 animate-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--border-subtle)]">
+    <section className="glass-panel p-5 space-y-4 animate-rack-focus" aria-label="Connected Portfolio">
+      {/* Portfolio Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--glass-border-subtle)]">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-accent-teal/10 border border-accent-teal/20 flex items-center justify-center">
-            <Wallet className="w-4 h-4 text-accent-teal" />
+          <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-[var(--glass-border)] flex items-center justify-center">
+            <Wallet className="w-4 h-4 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[13px] font-semibold text-white">Connected Portfolio</span>
-              <span className="text-[9px] px-1.5 py-[2px] rounded-md bg-accent-emerald/10 text-accent-emerald border border-accent-emerald/20 font-mono font-medium flex items-center gap-1">
-                <span className="w-[4px] h-[4px] rounded-full bg-accent-emerald animate-pulse" />
+              <span className="text-sm font-semibold text-white">Connected Portfolio</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-[var(--text-secondary)] border border-[var(--glass-border-subtle)] font-mono">
                 Read-Only
               </span>
               {isDemoMode && (
-                <span className="text-[9px] px-1.5 py-[2px] rounded-md bg-accent-amber/10 text-accent-amber border border-accent-amber/20 font-mono font-medium">
-                  Demo
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#D9A24B]/10 text-[#D9A24B] border border-[#D9A24B]/20 font-mono">
+                  Simulated
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[11px] text-[var(--text-muted)] font-mono">
-                {address.slice(0, 6)}…{address.slice(-4)}
-              </span>
-              <span className="text-[var(--text-muted)]">·</span>
-              <span className="text-[10px] text-[var(--text-muted)] font-mono">{chainName}</span>
+            <div className="flex items-center gap-2 mt-0.5 font-mono text-xs text-[var(--text-muted)]">
+              <span>{address.slice(0, 6)}…{address.slice(-4)}</span>
+              <span>·</span>
+              <span>{chainName}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => refreshBalances()}
             disabled={isLoadingBalances}
-            className="px-2.5 py-1 text-[11px] rounded-md bg-[var(--bg-surface-raised)] hover:bg-[var(--bg-surface-overlay)]
-              text-[var(--text-secondary)] transition-colors border border-[var(--border-subtle)]
-              flex items-center gap-1 cursor-pointer"
+            className="glass-btn"
           >
             <RefreshCw className={`w-3 h-3 ${isLoadingBalances ? "animate-spin" : ""}`} />
-            <span>{isLoadingBalances ? "Reading…" : "Refresh"}</span>
+            <span>{isLoadingBalances ? "Reading RPC…" : "Refresh"}</span>
           </button>
           <button
             onClick={() => disconnectWallet()}
-            className="px-2.5 py-1 text-[11px] rounded-md bg-accent-rose/8 hover:bg-accent-rose/15
-              text-accent-rose transition-colors border border-accent-rose/15
-              flex items-center gap-1 cursor-pointer"
+            className="glass-btn text-[#E5484D] hover:border-[#E5484D]/30"
           >
             <LogOut className="w-3 h-3" />
             <span>Disconnect</span>
@@ -99,24 +76,23 @@ export const WalletPortfolioSummary: React.FC<WalletPortfolioSummaryProps> = ({ 
         </div>
       </div>
 
-      {/* Security */}
-      <div className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg bg-[var(--bg-surface-raised)] border border-[var(--border-subtle)] text-[11px] text-[var(--text-muted)]">
-        <ShieldCheck className="w-3.5 h-3.5 text-accent-teal shrink-0 mt-0.5" />
+      {/* Advisory Security Notice */}
+      <div className="flex items-start gap-2.5 p-3 rounded-lg bg-white/[0.02] border border-[var(--glass-border-subtle)] text-xs text-[var(--text-muted)]">
+        <ShieldCheck className="w-3.5 h-3.5 text-[#35C48F] shrink-0 mt-0.5" />
         <p>
-          <span className="text-[var(--text-secondary)] font-medium">Non-Custodial.</span>{" "}
-          Connected via public JSON-RPC. No private key access. Cannot construct or sign transactions.
+          <span className="text-white font-medium">Non-Custodial Architecture.</span>{" "}
+          Connected via public JSON-RPC. Zero private key exposure. Cannot construct, execute, or sign transactions.
         </p>
       </div>
 
-      {/* Holdings */}
+      {/* Token Holdings & Optimization targets */}
       <div>
-        <h4 className="text-[10px] font-mono font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">
-          Holdings & Yield Recommendations
-        </h4>
+        <h3 className="text-[10px] font-mono font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-3">
+          Holdings & Rotation Recommendations
+        </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5 stagger">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 stagger-panels">
           {displayTokens.map(({ token, formatted }) => {
-            const accent = TOKEN_ACCENTS[token.symbol] || DEFAULT_ACCENT;
             const assetPools = pools.filter(
               (p) => p.symbol.toUpperCase() === token.symbol.toUpperCase()
             );
@@ -126,61 +102,47 @@ export const WalletPortfolioSummary: React.FC<WalletPortfolioSummaryProps> = ({ 
             return (
               <div
                 key={`${token.chainId}-${token.address}`}
-                className={`card-raised p-3.5 ${accent.border} animate-in space-y-2.5`}
+                className="glass-panel p-4 space-y-3 animate-rack-focus"
               >
-                {/* Token header */}
+                {/* Token identity */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className={`w-6 h-6 rounded-md ${accent.bg} flex items-center justify-center text-[9px] font-bold font-mono ${accent.text}`}>
+                    <span className="w-6 h-6 rounded bg-white/[0.08] border border-white/10 flex items-center justify-center text-[10px] font-bold font-mono text-white">
                       {token.symbol.slice(0, 2)}
                     </span>
-                    <span className="font-semibold text-white text-[13px]">{token.symbol}</span>
+                    <span className="font-semibold text-white text-sm">{token.symbol}</span>
                   </div>
-                  <span className="text-[9px] px-1.5 py-[2px] rounded bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--border-subtle)] font-mono">
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] border border-white/10 px-1.5 py-0.5 rounded">
                     {token.chain}
                   </span>
                 </div>
 
                 {/* Balance */}
                 <div>
-                  <div className="text-base font-bold font-mono text-white">
+                  <div className="text-lg font-bold font-mono text-white tabular-nums">
                     {isLoadingBalances ? (
-                      <span className="shimmer inline-block w-24 h-4 rounded" />
+                      <span className="inline-block w-20 h-4 rounded bg-white/10 animate-pulse" />
                     ) : (
                       formatted.toLocaleString(undefined, { maximumFractionDigits: 2 })
                     )}
                   </div>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5 font-mono">Wallet yield: 0.00% (idle)</p>
+                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5 font-mono">Idle yield: 0.00%</p>
                 </div>
 
-                {/* Recommendation */}
+                {/* Target recommendation */}
                 {bestPool && (
-                  <div className="pt-2.5 border-t border-[var(--border-subtle)] space-y-1.5">
-                    <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-[var(--text-muted)]">Best target</span>
-                      <span className="text-accent-teal font-medium font-mono">{bestPool.project} · {bestPool.chain}</span>
+                  <div className="pt-2.5 border-t border-[var(--glass-border-subtle)] space-y-1.5 text-xs font-mono">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[var(--text-muted)]">Target</span>
+                      <span className="text-white capitalize">{bestPool.project} · {bestPool.chain}</span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px]">
+                    <div className="flex items-center justify-between">
                       <span className="text-[var(--text-muted)]">Available APY</span>
-                      <span className="text-accent-emerald font-bold font-mono">+{bestPool.headline_apy.toFixed(2)}%</span>
+                      <span className="text-[#35C48F] font-bold">+{bestPool.headline_apy.toFixed(2)}%</span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-[var(--text-muted)]">Risk grade</span>
-                      <span className="text-accent-indigo font-mono">{bestPool.composite_score.toFixed(1)}/100</span>
-                    </div>
-
-                    {/* Visual pickup bar */}
-                    <div className="flex items-center gap-1.5 mt-1 pt-1.5 border-t border-[var(--border-subtle)]">
-                      <TrendingUp className="w-3 h-3 text-accent-emerald shrink-0" />
-                      <div className="flex-1 score-bar">
-                        <div
-                          className="score-bar-fill bg-gradient-to-r from-accent-emerald to-accent-teal"
-                          style={{ width: `${Math.min(100, potentialYield * 8)}%` }}
-                        />
-                      </div>
-                      <span className="text-[10px] font-mono font-bold text-accent-emerald">
-                        +{potentialYield.toFixed(2)}%
-                      </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[var(--text-muted)]">Risk Grade</span>
+                      <span className="text-[var(--text-secondary)]">{bestPool.composite_score.toFixed(1)}/100</span>
                     </div>
                   </div>
                 )}
@@ -189,6 +151,6 @@ export const WalletPortfolioSummary: React.FC<WalletPortfolioSummaryProps> = ({ 
           })}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
