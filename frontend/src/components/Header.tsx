@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { ShieldCheck, Database, Compass, Wallet, Sparkles } from "lucide-react";
+import { Wallet, Sparkles, Zap } from "lucide-react";
 import { useWeb3 } from "@/providers/Web3Provider";
 import { SystemHealth } from "@/types";
 
@@ -9,6 +11,8 @@ interface HeaderProps {
   onHomeChainChange: (chain: string) => void;
 }
 
+const CHAINS = ["Ethereum", "Arbitrum", "Optimism", "Base", "Solana"];
+
 export const Header: React.FC<HeaderProps> = ({
   health,
   selectedHomeChain,
@@ -17,93 +21,120 @@ export const Header: React.FC<HeaderProps> = ({
   const { address, isConnected, isConnecting, isDemoMode, connectWallet, disconnectWallet, simulateDemoWallet } = useWeb3();
 
   return (
-    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
-      <div>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
-            <Compass className="w-6 h-6 text-white" />
+    <header className="animate-in pb-6">
+      {/* Top row: Logo + actions */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Logo mark */}
+        <div className="flex items-center gap-3.5">
+          {/* Custom SVG mark */}
+          <div className="relative">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="36" height="36" rx="10" fill="url(#logo-grad)" />
+              <path d="M10 22L14 13H18L14 22H10Z" fill="white" fillOpacity="0.9"/>
+              <path d="M16 22L20 13H24L20 22H16Z" fill="white" fillOpacity="0.6"/>
+              <path d="M22 22L26 13H28L24 22H22Z" fill="white" fillOpacity="0.35"/>
+              <defs>
+                <linearGradient id="logo-grad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#2dd4bf"/>
+                  <stop offset="1" stopColor="#818cf8"/>
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
+
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-              STAVLOS
-              <span className="text-xs uppercase tracking-widest px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/30">
-                Quant Yield Engine
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl font-bold tracking-tight text-white font-sans">
+                STAVLOS
+              </h1>
+              <span className="text-[10px] font-mono font-medium tracking-widest uppercase px-2 py-[3px] rounded-md bg-[var(--bg-surface-raised)] text-[var(--text-tertiary)] border border-[var(--border-subtle)]">
+                v0.1
               </span>
-            </h1>
-            <p className="text-sm text-slate-400">
-              Cross-chain risk-adjusted stablecoin lending analytics & backtesting
+            </div>
+            <p className="text-[12px] text-[var(--text-muted)] mt-0.5 tracking-wide">
+              Cross-chain yield intelligence & backtesting
             </p>
           </div>
         </div>
-      </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Home Chain Selector */}
-        <div className="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs">
-          <span className="text-slate-400">Home Chain:</span>
-          <select
-            id="home-chain-select"
-            value={selectedHomeChain}
-            onChange={(e) => onHomeChainChange(e.target.value)}
-            className="bg-slate-900 text-sky-300 font-semibold rounded px-2 py-1 border border-slate-700 focus:outline-none focus:border-sky-500 cursor-pointer"
-          >
-            <option value="Ethereum">Ethereum</option>
-            <option value="Arbitrum">Arbitrum</option>
-            <option value="Optimism">Optimism</option>
-            <option value="Base">Base</option>
-            <option value="Solana">Solana</option>
-          </select>
-        </div>
+        {/* Right side: chain selector, status, wallet */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Home Chain — Segmented Control */}
+          <div className="segmented-control" id="home-chain-selector">
+            {CHAINS.map((chain) => (
+              <button
+                key={chain}
+                onClick={() => onHomeChainChange(chain)}
+                className={chain === selectedHomeChain ? "active" : ""}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span className={`chain-dot chain-dot-${chain.toLowerCase()}`} />
+                  <span className="hidden sm:inline">{chain}</span>
+                  <span className="sm:hidden">{chain.slice(0, 3)}</span>
+                </span>
+              </button>
+            ))}
+          </div>
 
-        {/* System Health Badges */}
-        <div className="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs text-emerald-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>{health?.status === "healthy" ? "Engine Operational" : "Live Simulation"}</span>
-        </div>
+          {/* Status */}
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[11px]">
+            <Zap className="w-3 h-3 text-accent-emerald" />
+            <span className="font-mono text-[var(--text-tertiary)]">
+              {health?.status === "healthy" ? "Online" : "Sim"}
+            </span>
+          </div>
 
-        {/* Non-Custodial Web3 Wallet Connector */}
-        <div className="flex items-center gap-2">
+          {/* Wallet */}
           {isConnected && address ? (
-            <div className="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs border border-sky-500/40">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span className="font-mono text-sky-300">
-                {address.slice(0, 6)}...{address.slice(-4)}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-surface)] border border-accent-teal/20 text-[11px]">
+              <span className="w-[5px] h-[5px] rounded-full bg-accent-emerald animate-pulse" />
+              <span className="font-mono text-accent-teal font-medium">
+                {address.slice(0, 6)}…{address.slice(-4)}
               </span>
               {isDemoMode && (
-                <span className="text-[10px] px-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="text-[9px] px-1.5 py-[1px] rounded bg-accent-amber/10 text-accent-amber border border-accent-amber/20 font-medium">
                   Demo
                 </span>
               )}
               <button
                 onClick={disconnectWallet}
-                className="text-[11px] text-slate-400 hover:text-rose-400 ml-1 transition-colors"
+                className="text-[var(--text-muted)] hover:text-accent-rose ml-1 transition-colors text-xs leading-none"
                 title="Disconnect wallet"
               >
-                ✕
+                ×
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white shadow-md shadow-sky-500/20 flex items-center gap-1.5 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-semibold
+                  bg-gradient-to-r from-accent-teal/90 to-accent-cyan/80
+                  hover:from-accent-teal hover:to-accent-cyan
+                  text-[#06090f] shadow-sm transition-all cursor-pointer"
               >
                 <Wallet className="w-3.5 h-3.5" />
-                <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
+                <span>{isConnecting ? "Connecting…" : "Connect"}</span>
               </button>
               <button
                 onClick={() => simulateDemoWallet()}
-                className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 flex items-center gap-1.5 transition-all cursor-pointer"
-                title="Simulate a read-only institutional portfolio without needing an installed wallet extension"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium
+                  bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-raised)]
+                  text-[var(--text-secondary)] border border-[var(--border-subtle)]
+                  hover:border-[var(--border-default)] transition-all cursor-pointer"
+                title="Simulate a read-only institutional portfolio"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Demo Wallet</span>
+                <Sparkles className="w-3 h-3 text-accent-amber" />
+                <span>Demo</span>
               </button>
             </div>
           )}
         </div>
       </div>
+
+      {/* Divider */}
+      <div className="mt-5 h-px bg-gradient-to-r from-transparent via-[var(--border-default)] to-transparent" />
     </header>
   );
 };

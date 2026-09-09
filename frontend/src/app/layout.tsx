@@ -14,25 +14,44 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-background text-slate-100 antialiased flex flex-col">
-        {/* Persistent Architectural Constraint & Non-Execution Banner */}
-        <div className="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-center text-xs font-medium text-amber-300 flex items-center justify-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>
-            <strong>READ-ONLY PORTFOLIO INTELLIGENCE:</strong> Non-custodial read-only connection. The app never accesses private keys or signs transactions. Capital allocation remains advisory.
+      <body className="min-h-screen flex flex-col">
+        {/* Minimal read-only indicator — subtle top bar */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-accent-teal/40 to-transparent" />
+        <div className="px-4 py-1.5 flex items-center justify-center gap-2 text-[11px] text-[var(--text-muted)] border-b border-[var(--border-subtle)]">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-[5px] h-[5px] rounded-full bg-accent-teal/60 animate-pulse" />
+            <span className="font-medium text-[var(--text-tertiary)]">Read-Only Advisory</span>
+            <span className="text-[var(--text-muted)]">·</span>
+            <span>Non-custodial</span>
+            <span className="text-[var(--text-muted)]">·</span>
+            <span>No private key access</span>
+            <span className="text-[var(--text-muted)]">·</span>
+            <span>Simulation only</span>
           </span>
         </div>
+
         <Web3Provider>
-          <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 max-w-[1360px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {children}
           </main>
         </Web3Provider>
-        <footer className="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
-          <p>Cross-Chain Stablecoin Yield Optimizer | Quant Research Platform</p>
-          <p className="mt-1">Data powered by DeFiLlama Yields API. Tracking USDC, USDT, DAI, USDS, USDe.</p>
+
+        {/* Footer */}
+        <footer className="border-t border-[var(--border-subtle)] mt-auto">
+          <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">Stavlos</span>
+              <span className="text-[var(--text-muted)]">·</span>
+              <span className="text-[11px] text-[var(--text-muted)]">Quantitative Yield Research Platform</span>
+            </div>
+            <div className="text-[11px] text-[var(--text-muted)] flex items-center gap-1.5">
+              <span>Data via DeFiLlama</span>
+              <span>·</span>
+              <span className="font-mono">USDC · USDT · DAI · USDS · USDe</span>
+            </div>
+          </div>
         </footer>
       </body>
     </html>
   );
 }
-
