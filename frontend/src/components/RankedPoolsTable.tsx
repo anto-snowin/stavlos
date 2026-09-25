@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { ArrowUpDown, ChevronDown, ChevronUp, Layers, Info } from "lucide-react";
+import { ArrowUpDown, ChevronDown, ChevronUp, Layers, Info, ShieldAlert, ShieldCheck } from "lucide-react";
 import { PoolRiskScore } from "@/types";
-import { getRiskBlurPx, getRiskBlur } from "@/config/riskBlur";
 
 interface RankedPoolsTableProps {
   pools: PoolRiskScore[];
@@ -56,20 +55,22 @@ export const RankedPoolsTable: React.FC<RankedPoolsTableProps> = ({ pools }) => 
 
   return (
     <section className="space-y-4" aria-label="Ranked Opportunities">
-      {/* ─── Control Bar: Filters & Sorters ─── */}
-      <div className="glass-panel p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* ─── Control Bar: Filters & Sorters (Neo-Brutalist Block) ─── */}
+      <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_#000] p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
-            <Layers className="w-4 h-4 text-[#35C48F]" />
-            Ranked Opportunities
+          <h2 className="text-lg font-display font-black text-black uppercase flex items-center gap-2">
+            <span className="w-5 h-5 bg-black text-[#00E575] flex items-center justify-center text-xs">
+              #
+            </span>
+            RANKED OPPORTUNITIES
           </h2>
-          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-            Glass clarity reflects risk confidence · Frosted glass encodes uncertainty
+          <p className="text-xs text-[#555555] font-mono font-bold mt-0.5">
+            5-Factor Quantitative Risk Model · Strict Churn Protection
           </p>
         </div>
 
-        {/* Filter controls */}
-        <div className="flex flex-wrap items-center gap-2 text-[11px]">
+        {/* Filter controls: Solid blocky buttons with black outline */}
+        <div className="flex flex-wrap items-center gap-2.5 text-xs">
           {/* Chain filter */}
           <div className="segmented-control" id="chain-filter-group">
             {chains.slice(0, 6).map((c) => (
@@ -79,7 +80,7 @@ export const RankedPoolsTable: React.FC<RankedPoolsTableProps> = ({ pools }) => 
                 onClick={() => setSelectedChain(c)}
                 className={selectedChain === c ? "active" : ""}
               >
-                {c === "ALL" ? "All Chains" : c}
+                {c === "ALL" ? "ALL CHAINS" : c.toUpperCase()}
               </button>
             ))}
           </div>
@@ -93,84 +94,84 @@ export const RankedPoolsTable: React.FC<RankedPoolsTableProps> = ({ pools }) => 
                 onClick={() => setSelectedSymbol(s)}
                 className={selectedSymbol === s ? "active" : ""}
               >
-                {s === "ALL" ? "All Assets" : s}
+                {s === "ALL" ? "ALL ASSETS" : s}
               </button>
             ))}
           </div>
 
-          <span className="text-[var(--text-muted)] font-mono text-[11px] ml-1">
+          <span className="bg-black text-[#FFE600] font-mono font-black text-xs px-2 py-1 border border-black shadow-[1.5px_1.5px_0px_#000]">
             {processedPools.length}/{pools.length}
           </span>
         </div>
       </div>
 
       {/* ─── Column Legend / Header ─── */}
-      <div className="hidden lg:grid lg:grid-cols-12 px-5 py-2 text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">
-        <div className="col-span-1"># Rank</div>
-        <div className="col-span-3">Protocol & Asset</div>
-        <div className="col-span-2">Chain</div>
+      <div className="hidden lg:grid lg:grid-cols-12 px-4 py-2.5 bg-black text-white font-mono font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+        <div className="col-span-1"># RANK</div>
+        <div className="col-span-3">PROTOCOL & ASSET</div>
+        <div className="col-span-2">CHAIN</div>
         <div
-          className="col-span-2 cursor-pointer flex items-center gap-1 hover:text-white transition-colors"
+          className="col-span-2 cursor-pointer flex items-center gap-1 hover:text-[#00E575] transition-colors"
           onClick={() => handleSort("headline_apy")}
         >
-          <span>Headline APY</span>
-          <ArrowUpDown className="w-3 h-3 text-[#35C48F]" />
+          <span>HEADLINE APY</span>
+          <ArrowUpDown className="w-3.5 h-3.5 stroke-[2.5]" />
         </div>
         <div
-          className="col-span-1 cursor-pointer flex items-center gap-1 hover:text-white transition-colors"
+          className="col-span-1 cursor-pointer flex items-center gap-1 hover:text-[#00E575] transition-colors"
           onClick={() => handleSort("tvl_usd")}
         >
           <span>TVL</span>
-          <ArrowUpDown className="w-3 h-3 text-[var(--text-muted)]" />
+          <ArrowUpDown className="w-3.5 h-3.5 stroke-[2.5]" />
         </div>
         <div
-          className="col-span-2 cursor-pointer flex items-center gap-1 hover:text-white transition-colors"
+          className="col-span-2 cursor-pointer flex items-center gap-1 hover:text-[#00E575] transition-colors"
           onClick={() => handleSort("composite_score")}
         >
-          <span>Risk Score & Blur</span>
-          <ArrowUpDown className="w-3 h-3 text-[var(--text-muted)]" />
+          <span>RISK GRADE</span>
+          <ArrowUpDown className="w-3.5 h-3.5 stroke-[2.5]" />
         </div>
-        <div className="col-span-1 text-right">Details</div>
+        <div className="col-span-1 text-right">AUDIT</div>
       </div>
 
-      {/* ─── Stack of Individual Glass Panels ─── */}
-      <div className="space-y-2.5 stagger-panels">
+      {/* ─── Stack of Individual Solid Brutalist Panels ─── */}
+      <div className="space-y-3">
         {processedPools.map((pool, idx) => {
           const isExpanded = expandedPoolId === pool.pool_id;
           const globalRank = idx + 1;
           const isHero = globalRank === 1 && selectedChain === "ALL" && selectedSymbol === "ALL";
-          const blurRadius = getRiskBlur(pool.composite_score);
-          const blurPx = getRiskBlurPx(pool.composite_score);
+          
+          // Risk Tier color block
+          const score = pool.composite_score;
+          const tierColor = score >= 85 ? "bg-[#00E575] text-black" : (score >= 75 ? "bg-[#FFE600] text-black" : "bg-[#FF4949] text-white");
+          const tierLabel = score >= 85 ? "TIER 1 · SAFE" : (score >= 75 ? "TIER 2 · BALANCED" : "TIER 3 · CAUTION");
+
+          // Row background: flat alternating
+          const rowBg = isHero ? "bg-[#FFFCE0]" : (idx % 2 === 0 ? "bg-white" : "bg-[#FAF7EE]");
 
           return (
             <div
               key={pool.pool_id}
-              className={`risk-panel animate-rack-focus ${isHero ? "risk-panel-hero" : ""}`}
+              className={`
+                border-2 border-black transition-transform duration-75 select-none
+                ${isHero ? "border-3 shadow-[5px_5px_0px_0px_#000]" : "shadow-[3px_3px_0px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_0px_#000]"}
+                ${rowBg}
+              `}
             >
-              {/* ─── Background Frosted Glass Substrate (Dynamic Blur via Risk Score) ─── */}
-              <div
-                className="absolute inset-0 pointer-events-none transition-all duration-300"
-                style={{
-                  backgroundColor: isHero ? "rgba(217, 162, 75, 0.04)" : "var(--glass-fill)",
-                  backdropFilter: `blur(${blurRadius})`,
-                  WebkitBackdropFilter: `blur(${blurRadius})`,
-                }}
-              />
-
-              {/* ─── Foreground Content Layer (Unblurred, Pin-Sharp Numerals) ─── */}
-              <div className="risk-panel-content p-4 sm:p-4.5">
+              {/* Foreground Content */}
+              <div className="p-4 sm:p-4.5">
                 <div
-                  className="grid grid-cols-2 lg:grid-cols-12 items-center gap-3 lg:gap-4 cursor-pointer select-none"
+                  className="grid grid-cols-2 lg:grid-cols-12 items-center gap-3 lg:gap-4 cursor-pointer"
                   onClick={() => toggleExpand(pool.pool_id)}
                 >
                   {/* Rank */}
                   <div className="col-span-1 flex items-center gap-2">
                     {isHero ? (
-                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded border border-[#D9A24B]/40 bg-[#D9A24B]/15 text-[#D9A24B]">
-                        #1
+                      <span className="font-mono text-xs font-black px-2 py-0.5 border-2 border-black bg-[#FFE600] text-black shadow-[2px_2px_0px_#000]">
+                        #1 TOP
                       </span>
                     ) : (
-                      <span className="font-mono text-xs text-[var(--text-muted)]">
+                      <span className="font-mono text-xs font-black px-1.5 py-0.5 border border-black bg-black text-white">
                         #{globalRank}
                       </span>
                     )}
@@ -179,101 +180,95 @@ export const RankedPoolsTable: React.FC<RankedPoolsTableProps> = ({ pools }) => 
                   {/* Protocol & Asset */}
                   <div className="col-span-1 lg:col-span-3">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-white font-semibold text-sm capitalize">
+                      <span className="text-black font-display font-black text-base capitalize">
                         {pool.project}
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-[var(--text-secondary)] border border-white/10">
+                      <span className="text-xs font-mono font-black px-1.5 py-0.5 bg-black text-white border border-black">
                         {pool.symbol}
                       </span>
                       {isHero && (
-                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#D9A24B] border border-[#D9A24B]/30 px-1 rounded">
-                          Hero
+                        <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#FFE600] text-black border border-black px-1">
+                          HERO PICK
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Chain badge (Glass-fill pill, no per-chain rainbow border) */}
+                  {/* Chain badge (Solid block with black border) */}
                   <div className="col-span-1 lg:col-span-2">
-                    <span className="glass-pill">
-                      <span>{pool.chain}</span>
+                    <span className="inline-block bg-white text-black font-mono font-bold text-xs px-2 py-0.5 border-1.5 border-black shadow-[1.5px_1.5px_0px_#000]">
+                      {pool.chain.toUpperCase()}
                     </span>
                   </div>
 
-                  {/* Headline APY */}
+                  {/* Headline APY (High-contrast Monospace) */}
                   <div className="col-span-1 lg:col-span-2">
-                    <div className="text-sm sm:text-base font-bold font-mono text-[#35C48F] tabular-nums">
+                    <div className="inline-block bg-[#00E575] text-black border border-black px-2 py-0.5 font-mono font-black text-base sm:text-lg tabular-nums shadow-[1.5px_1.5px_0px_#000]">
                       {pool.headline_apy.toFixed(2)}%
                     </div>
-                    <div className="text-[10px] font-mono text-[var(--text-muted)]">
-                      30d avg {pool.rolling_30d_avg_apy.toFixed(2)}%
+                    <div className="text-[11px] font-mono font-bold text-[#555555] mt-0.5">
+                      30D AVG: {pool.rolling_30d_avg_apy.toFixed(2)}%
                     </div>
                   </div>
 
                   {/* TVL */}
                   <div className="col-span-1 lg:col-span-1">
-                    <div className="text-xs sm:text-sm font-mono text-[var(--text-secondary)] tabular-nums">
+                    <div className="text-sm font-mono font-black text-black tabular-nums">
                       ${(pool.tvl_usd / 1e6).toFixed(1)}M
                     </div>
-                    <div className="text-[10px] font-mono text-[var(--text-muted)]">
-                      {pool.pool_age_days ? `${pool.pool_age_days}d age` : "mature"}
+                    <div className="text-[10px] font-mono font-bold text-[#555555]">
+                      {pool.pool_age_days ? `${pool.pool_age_days}D AGE` : "MATURE"}
                     </div>
                   </div>
 
-                  {/* Risk Score & Ambient Blur Value */}
+                  {/* Risk Score (Solid Color Block) */}
                   <div className="col-span-1 lg:col-span-2">
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-mono font-bold text-white text-sm sm:text-base tabular-nums">
-                        {pool.composite_score.toFixed(1)}
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-0.5 border border-black font-mono font-black text-xs shadow-[1.5px_1.5px_0px_#000] ${tierColor}`}>
+                        {pool.composite_score.toFixed(1)}/100
                       </span>
-                      <span className="text-[10px] font-mono text-[var(--text-tertiary)]">
-                        /100
-                      </span>
-                      <span className="text-[10px] font-mono text-[var(--text-muted)] border border-white/10 px-1 py-0.5 rounded">
-                        blur({blurPx}px)
+                      <span className="text-[10px] font-mono font-bold text-black hidden sm:inline">
+                        {tierLabel}
                       </span>
                     </div>
                   </div>
 
-                  {/* Expand Chevron */}
+                  {/* Expand Chevron (Solid brutalist button) */}
                   <div className="col-span-2 lg:col-span-1 flex justify-end">
-                    <button
-                      className="p-1 text-[var(--text-muted)] hover:text-white transition-colors"
-                      aria-label="Toggle factor breakdown"
-                    >
+                    <div className="p-1 border border-black bg-white hover:bg-black hover:text-white transition-colors cursor-pointer shadow-[1px_1px_0px_#000]">
                       {isExpanded ? (
-                        <ChevronUp className="w-4 h-4" />
+                        <ChevronUp className="w-4 h-4 stroke-[3]" />
                       ) : (
-                        <ChevronDown className="w-4 h-4" />
+                        <ChevronDown className="w-4 h-4 stroke-[3]" />
                       )}
-                    </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* ─── Expanded Decomposed Risk Factors ─── */}
                 {isExpanded && (
-                  <div className="mt-4 pt-4 border-t border-[var(--glass-border-subtle)] space-y-3 animate-fade">
+                  <div className="mt-4 pt-4 border-t-2 border-black space-y-3">
                     {/* Five factor breakdown tiles */}
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                       {[
-                        { label: "TVL Depth", weight: "25%", value: pool.tvl_score },
-                        { label: "Protocol Age", weight: "20%", value: pool.age_score, extra: pool.pool_age_days ? `${pool.pool_age_days}d` : undefined },
-                        { label: "Stability", weight: "20%", value: pool.volatility_score, extra: pool.rolling_30d_volatility ? `σ ${pool.rolling_30d_volatility.toFixed(3)}` : undefined },
-                        { label: "Chain Tier", weight: "20%", value: pool.chain_risk_score },
-                        { label: "Bridge Friction", weight: "15%", value: pool.bridge_score },
+                        { label: "TVL DEPTH", weight: "25%", value: pool.tvl_score },
+                        { label: "PROTOCOL AGE", weight: "20%", value: pool.age_score, extra: pool.pool_age_days ? `${pool.pool_age_days}d` : undefined },
+                        { label: "STABILITY", weight: "20%", value: pool.volatility_score, extra: pool.rolling_30d_volatility ? `σ ${pool.rolling_30d_volatility.toFixed(3)}` : undefined },
+                        { label: "CHAIN TIER", weight: "20%", value: pool.chain_risk_score },
+                        { label: "BRIDGE FRICTION", weight: "15%", value: pool.bridge_score },
                       ].map((factor) => (
                         <div
                           key={factor.label}
-                          className="p-2.5 rounded-lg border border-[var(--glass-border-subtle)] bg-white/[0.02]"
+                          className="p-2.5 bg-white border-2 border-black shadow-[2px_2px_0px_#000]"
                         >
-                          <div className="text-[10px] text-[var(--text-muted)] font-mono uppercase">
+                          <div className="text-[10px] text-[#555555] font-mono font-black uppercase">
                             {factor.label} ({factor.weight})
                           </div>
-                          <div className="text-sm font-mono font-semibold text-white mt-1 tabular-nums">
+                          <div className="text-base font-mono font-black text-black mt-1 tabular-nums">
                             {(factor.value * 100).toFixed(1)}%
                           </div>
                           {factor.extra && (
-                            <div className="text-[9px] font-mono text-[var(--text-tertiary)] mt-0.5">
+                            <div className="text-[10px] font-mono font-bold text-black mt-0.5">
                               {factor.extra}
                             </div>
                           )}
@@ -282,10 +277,12 @@ export const RankedPoolsTable: React.FC<RankedPoolsTableProps> = ({ pools }) => 
                     </div>
 
                     {/* Audit Rationale */}
-                    <div className="flex items-start gap-2.5 p-3 rounded-lg border border-[var(--glass-border-subtle)] bg-white/[0.02] text-xs text-[var(--text-secondary)]">
-                      <Info className="w-4 h-4 text-[#35C48F] shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-semibold text-white">Audit Rationale: </span>
+                    <div className="flex items-start gap-2.5 p-3 bg-white border-2 border-black shadow-[2px_2px_0px_#000] text-xs font-mono">
+                      <Info className="w-4 h-4 text-black shrink-0 mt-0.5 stroke-[2.5]" />
+                      <div className="text-black leading-relaxed">
+                        <span className="font-black bg-black text-[#FFE600] px-1 py-0.5 mr-1.5">
+                          AUDIT RATIONALE
+                        </span>
                         {pool.explanation}
                       </div>
                     </div>

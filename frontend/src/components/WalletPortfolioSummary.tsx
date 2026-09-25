@@ -3,7 +3,7 @@
 import React from "react";
 import { useWeb3 } from "@/providers/Web3Provider";
 import { PoolRiskScore } from "@/types";
-import { Wallet, ShieldCheck, TrendingUp, LogOut, RefreshCw } from "lucide-react";
+import { Wallet, ShieldCheck, LogOut, RefreshCw } from "lucide-react";
 
 interface WalletPortfolioSummaryProps {
   pools: PoolRiskScore[];
@@ -30,29 +30,29 @@ export const WalletPortfolioSummary: React.FC<WalletPortfolioSummaryProps> = ({ 
   const topOpportunity = pools.length > 0 ? pools[0] : null;
 
   return (
-    <section className="glass-panel p-5 space-y-4 animate-rack-focus" aria-label="Connected Portfolio">
+    <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_#000] p-5 space-y-4" aria-label="Connected Portfolio">
       {/* Portfolio Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--glass-border-subtle)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-black">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-[var(--glass-border)] flex items-center justify-center">
-            <Wallet className="w-4 h-4 text-white" />
+          <div className="w-9 h-9 bg-black text-white flex items-center justify-center border-2 border-black shadow-[2px_2px_0px_#000]">
+            <Wallet className="w-5 h-5 text-[#FFE600] stroke-[2.5]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-white">Connected Portfolio</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-[var(--text-secondary)] border border-[var(--glass-border-subtle)] font-mono">
-                Read-Only
+              <span className="text-base font-display font-black text-black uppercase">CONNECTED PORTFOLIO</span>
+              <span className="text-[10px] px-1.5 py-0.5 bg-black text-white font-mono font-bold uppercase">
+                READ-ONLY
               </span>
               {isDemoMode && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#D9A24B]/10 text-[#D9A24B] border border-[#D9A24B]/20 font-mono">
-                  Simulated
+                <span className="text-[10px] px-1.5 py-0.5 bg-[#FFE600] text-black border border-black font-mono font-black uppercase">
+                  SIMULATED
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2 mt-0.5 font-mono text-xs text-[var(--text-muted)]">
+            <div className="flex items-center gap-2 mt-0.5 font-mono text-xs font-bold text-[#444444]">
               <span>{address.slice(0, 6)}…{address.slice(-4)}</span>
               <span>·</span>
-              <span>{chainName}</span>
+              <span className="uppercase">{chainName}</span>
             </div>
           </div>
         </div>
@@ -61,88 +61,89 @@ export const WalletPortfolioSummary: React.FC<WalletPortfolioSummaryProps> = ({ 
           <button
             onClick={() => refreshBalances()}
             disabled={isLoadingBalances}
-            className="glass-btn"
+            className="neo-btn font-mono text-xs"
           >
-            <RefreshCw className={`w-3 h-3 ${isLoadingBalances ? "animate-spin" : ""}`} />
-            <span>{isLoadingBalances ? "Reading RPC…" : "Refresh"}</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoadingBalances ? "animate-spin" : ""}`} />
+            <span>{isLoadingBalances ? "READING RPC…" : "REFRESH"}</span>
           </button>
           <button
             onClick={() => disconnectWallet()}
-            className="glass-btn text-[#E5484D] hover:border-[#E5484D]/30"
+            className="neo-btn bg-[#FF4949] text-white hover:bg-[#E03636] font-mono text-xs"
           >
-            <LogOut className="w-3 h-3" />
-            <span>Disconnect</span>
+            <LogOut className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>DISCONNECT</span>
           </button>
         </div>
       </div>
 
-      {/* Advisory Security Notice */}
-      <div className="flex items-start gap-2.5 p-3 rounded-lg bg-white/[0.02] border border-[var(--glass-border-subtle)] text-xs text-[var(--text-muted)]">
-        <ShieldCheck className="w-3.5 h-3.5 text-[#35C48F] shrink-0 mt-0.5" />
+      {/* Advisory Security Notice (Stark Yellow Warning Strip) */}
+      <div className="flex items-start gap-2.5 p-3 bg-[#FFE600] border-2 border-black shadow-[2px_2px_0px_#000] text-xs font-mono font-bold text-black">
+        <ShieldCheck className="w-4 h-4 text-black shrink-0 mt-0.5 stroke-[2.5]" />
         <p>
-          <span className="text-white font-medium">Non-Custodial Architecture.</span>{" "}
-          Connected via public JSON-RPC. Zero private key exposure. Cannot construct, execute, or sign transactions.
+          <span className="bg-black text-[#FFE600] px-1 py-0.2 mr-1">NON-CUSTODIAL SAFEGUARD</span>
+          Zero private key access. Cannot sign or execute transactions autonomously. All capital rotations require your explicit authorization.
         </p>
       </div>
 
       {/* Token Holdings & Optimization targets */}
       <div>
-        <h3 className="text-[10px] font-mono font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-3">
-          Holdings & Rotation Recommendations
+        <h3 className="text-xs font-mono font-black text-black uppercase tracking-wider mb-3">
+          HOLDINGS & RECOMMENDED ALLOCATIONS
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 stagger-panels">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {displayTokens.map(({ token, formatted }) => {
             const assetPools = pools.filter(
               (p) => p.symbol.toUpperCase() === token.symbol.toUpperCase()
             );
             const bestPool = assetPools.length > 0 ? assetPools[0] : topOpportunity;
-            const potentialYield = bestPool?.headline_apy || 0.0;
 
             return (
               <div
                 key={`${token.chainId}-${token.address}`}
-                className="glass-panel p-4 space-y-3 animate-rack-focus"
+                className="bg-white border-2 border-black shadow-[3px_3px_0px_0px_#000] p-4 space-y-3"
               >
                 {/* Token identity */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded bg-white/[0.08] border border-white/10 flex items-center justify-center text-[10px] font-bold font-mono text-white">
+                    <span className="w-7 h-7 bg-black text-white border border-black flex items-center justify-center text-xs font-black font-mono">
                       {token.symbol.slice(0, 2)}
                     </span>
-                    <span className="font-semibold text-white text-sm">{token.symbol}</span>
+                    <span className="font-display font-black text-black text-base">{token.symbol}</span>
                   </div>
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] border border-white/10 px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] font-mono font-black bg-[#FAF8F5] text-black border border-black px-1.5 py-0.5 uppercase">
                     {token.chain}
                   </span>
                 </div>
 
                 {/* Balance */}
                 <div>
-                  <div className="text-lg font-bold font-mono text-white tabular-nums">
+                  <div className="text-xl font-black font-mono text-black tabular-nums">
                     {isLoadingBalances ? (
-                      <span className="inline-block w-20 h-4 rounded bg-white/10 animate-pulse" />
+                      <span className="inline-block w-20 h-5 bg-black/10 animate-pulse" />
                     ) : (
                       formatted.toLocaleString(undefined, { maximumFractionDigits: 2 })
                     )}
                   </div>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5 font-mono">Idle yield: 0.00%</p>
+                  <p className="text-[11px] text-[#555555] mt-0.5 font-mono font-bold">Idle yield: 0.00%</p>
                 </div>
 
                 {/* Target recommendation */}
                 {bestPool && (
-                  <div className="pt-2.5 border-t border-[var(--glass-border-subtle)] space-y-1.5 text-xs font-mono">
+                  <div className="pt-2.5 border-t-2 border-black space-y-1.5 text-xs font-mono font-bold">
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--text-muted)]">Target</span>
-                      <span className="text-white capitalize">{bestPool.project} · {bestPool.chain}</span>
+                      <span className="text-[#555555]">TARGET</span>
+                      <span className="text-black capitalize">{bestPool.project} · {bestPool.chain}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--text-muted)]">Available APY</span>
-                      <span className="text-[#35C48F] font-bold">+{bestPool.headline_apy.toFixed(2)}%</span>
+                      <span className="text-[#555555]">AVAILABLE APY</span>
+                      <span className="bg-[#00E575] border border-black px-1 text-black font-black">
+                        +{bestPool.headline_apy.toFixed(2)}%
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--text-muted)]">Risk Grade</span>
-                      <span className="text-[var(--text-secondary)]">{bestPool.composite_score.toFixed(1)}/100</span>
+                      <span className="text-[#555555]">RISK GRADE</span>
+                      <span className="text-black font-black">{bestPool.composite_score.toFixed(1)}/100</span>
                     </div>
                   </div>
                 )}

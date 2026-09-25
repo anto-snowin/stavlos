@@ -1,44 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Stavlos Glassmorphism Design Tokens ─── */
+/* ─── Stavlos Neo-Brutalism Design Tokens ─── */
 :root {
-  /* Surface Backdrop — Physical depth for glass refraction */
-  --bg-backdrop-start: #16213E;
-  --bg-backdrop-end: #0D1321;
-  --bg-surface: rgba(255, 255, 255, 0.04);
-  --bg-surface-raised: rgba(255, 255, 255, 0.07);
+  /* Stark, flat palette */
+  --bg-base: #F5F3EF;              /* Warm off-white/cream */
+  --bg-card: #FFFFFF;              /* Crisp flat white */
+  --text-primary: #000000;          /* Deep high-contrast black */
+  --text-secondary: #2D3748;        /* Dark gray */
+  --text-muted: #555555;            /* Mid gray */
+  
+  --border-color: #000000;          /* Pure black */
+  --border-width: 2px;
+  --border-width-thick: 3px;
+  --shadow-offset: 4px 4px 0px #000000;
+  --shadow-offset-sm: 2px 2px 0px #000000;
+  --shadow-offset-lg: 6px 6px 0px #000000;
 
-  /* Glass Primitives (Strictly capped opacity & hairline borders) */
-  --glass-fill: rgba(255, 255, 255, 0.06);
-  --glass-fill-hover: rgba(255, 255, 255, 0.09);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-border-subtle: rgba(255, 255, 255, 0.06);
+  /* Saturated flat accents */
+  --color-acid-green: #00E575;      /* Positive yield, primary actions */
+  --color-neo-yellow: #FFE600;      /* Hero pick, notifications */
+  --color-alert-red: #FF4949;       /* Risk warnings, drawdowns */
+  --color-neo-blue: #38BDF8;        /* Informational badges */
+  --color-neo-purple: #A78BFA;      /* Solana / Alt-chains */
 
-  /* Semantic Accents — Restrained, purposeful */
-  --color-jade: #35C48F;           /* Positive deltas, primary facts */
-  --color-copper: #D9A24B;         /* Reserved strictly for the single top-ranked / hero panel */
-  --color-alert-red: #E5484D;      /* Risk warnings and negative deltas only */
-
-  /* Neutral Typography */
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-tertiary: #64748B;
-  --text-muted: #475569;
-
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Archivo Black', 'Space Grotesk', sans-serif;
+  --font-sans: 'Space Grotesk', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
 }
 
-/* ─── Base Reset & Atmospheric Canvas ─── */
+/* ─── Base Reset & Stark Canvas ─── */
 * {
   box-sizing: border-box;
 }
@@ -46,29 +40,12 @@
 body {
   font-family: var(--font-sans);
   color: var(--text-primary);
-  /* Atmospheric radial gradient — never flat black so frosted glass has substrate to refract */
-  background: radial-gradient(circle at 50% 15%, var(--bg-backdrop-start) 0%, var(--bg-backdrop-end) 100%) fixed;
+  background-color: var(--bg-base);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-}
-
-/* Subtle micro-texture so frosted glass catches refraction grain */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.02;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
-
-body > * {
-  position: relative;
-  z-index: 1;
 }
 
 /* Monospace numerals stay tabular and crisp */
@@ -77,214 +54,211 @@ body > * {
 }
 
 ::selection {
-  background: rgba(53, 196, 143, 0.25);
-  color: #fff;
+  background: var(--color-acid-green);
+  color: #000000;
 }
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #E5E0D8;
+  border-left: 2px solid #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #000000;
+  border: 1px solid #000000;
 }
 
-/* ─── Glassmorphism Panels ─── */
-/* Standard static glass panel for facts (near-clear, 6px blur) */
-.glass-panel {
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+/* ─── Neo-Brutalist Containers ─── */
+/* Standard container: thick black outline, hard offset shadow, zero blur */
+.neo-card, .glass-panel, .card {
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0px 0px #000000;
+  border-radius: 0px;
   position: relative;
 }
 
-/* Hero panel: reserved for the single top-ranked pick (sharp glass, copper accent) */
-.glass-hero {
-  background: var(--glass-fill);
-  border: 1px solid rgba(217, 162, 75, 0.35);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+/* Hero card: Yellow pop with thicker 3px border and 6px hard shadow */
+.neo-hero, .glass-hero {
+  background: #FFE600;
+  border: 3px solid #000000;
+  box-shadow: 6px 6px 0px 0px #000000;
+  border-radius: 0px;
   position: relative;
 }
 
-/* Legacy card compat — maps directly to glass-panel */
-.card {
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  position: relative;
-}
-
-/* Supporting metric card */
-.glass-metric {
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+/* Metric tile: Flat white, bold 2px border, 3px shadow */
+.neo-metric, .glass-metric {
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0px 0px #000000;
+  border-radius: 0px;
   padding: 1rem;
   position: relative;
 }
 
-/* Glass interactive button */
-.glass-btn {
+/* ─── Neo-Brutalist Interactive Buttons ─── */
+.neo-btn, .glass-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-size: 11px;
-  font-weight: 500;
-  padding: 0.375rem 0.75rem;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0px 0px #000000;
+  border-radius: 0px;
+  color: #000000;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
   cursor: pointer;
-}
-.glass-btn:hover {
-  background: var(--glass-fill-hover);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-.glass-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.1s ease;
+  user-select: none;
 }
 
-/* Glass pill badge */
-.glass-pill {
+.neo-btn:hover, .glass-btn:hover {
+  background: #F4F0EA;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px 0px #000000;
+}
+
+/* Hard Pressed effect: shifts into shadow direction and removes shadow */
+.neo-btn:active, .glass-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px 0px #000000;
+}
+
+.neo-btn:disabled, .glass-btn:disabled {
+  background: #E5E0D8;
+  color: #888888;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0px 0px #000000;
+}
+
+/* Button variant: Acid Green */
+.neo-btn-primary {
+  background: #00E575;
+  color: #000000;
+}
+.neo-btn-primary:hover {
+  background: #00CC66;
+}
+
+/* Button variant: Yellow */
+.neo-btn-yellow {
+  background: #FFE600;
+  color: #000000;
+}
+.neo-btn-yellow:hover {
+  background: #EED500;
+}
+
+/* Button variant: Alert Red */
+.neo-btn-red {
+  background: #FF4949;
+  color: #FFFFFF;
+}
+.neo-btn-red:hover {
+  background: #E03636;
+}
+
+/* ─── Neo-Brutalist Badges & Pills ─── */
+.neo-pill, .glass-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border-subtle);
-  border-radius: 9999px;
-  padding: 0.15rem 0.5rem;
+  gap: 0.35rem;
+  background: #FFFFFF;
+  border: 1.5px solid #000000;
+  box-shadow: 1.5px 1.5px 0px 0px #000000;
+  border-radius: 0px;
+  padding: 0.2rem 0.55rem;
   font-size: 11px;
   font-family: var(--font-mono);
-  color: var(--text-secondary);
+  font-weight: 700;
+  color: #000000;
 }
 
-/* ─── Stacked Risk Panels (Ranked Pools) ─── */
-/* Each item is an independent glass panel with risk-mapped blur */
+/* ─── Segmented Controls (Neo-Brutalist Blocks) ─── */
+.segmented-control {
+  display: inline-flex;
+  gap: 0;
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0px 0px #000000;
+  border-radius: 0px;
+  padding: 0;
+}
+
+.segmented-control button {
+  padding: 5px 12px;
+  border-radius: 0px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: #000000;
+  border: none;
+  border-right: 1.5px solid #000000;
+  background: #FFFFFF;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.segmented-control button:last-child {
+  border-right: none;
+}
+
+.segmented-control button:hover {
+  background: #F0EDE6;
+}
+
+/* Full color inversion on active state */
+.segmented-control button.active {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+/* ─── Ranked Pool Item ─── */
 .risk-panel {
   position: relative;
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0px 0px #000000;
+  border-radius: 0px;
   overflow: hidden;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 .risk-panel:hover {
-  background: var(--glass-fill-hover);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-/* Top pick hero styling */
-.risk-panel-hero {
-  border-color: rgba(217, 162, 75, 0.4);
-}
-.risk-panel-hero:hover {
-  border-color: rgba(217, 162, 75, 0.6);
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px 0px #000000;
 }
 
-/* Unblurred foreground layer ensuring numerals and labels remain pin-sharp */
+.risk-panel-hero {
+  border: 3px solid #000000;
+  box-shadow: 5px 5px 0px 0px #000000;
+  background: #FFFDF0;
+}
+.risk-panel-hero:hover {
+  box-shadow: 7px 7px 0px 0px #000000;
+}
+
 .risk-panel-content {
   position: relative;
   z-index: 10;
 }
 
-/* ─── Segmented Control (Glass) ─── */
-.segmented-control {
-  display: inline-flex;
-  gap: 2px;
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 2px;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-.segmented-control button {
-  padding: 4px 12px;
-  border-radius: calc(var(--radius-md) - 2px);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-tertiary);
-  transition: all 0.15s ease;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.segmented-control button:hover {
-  color: var(--text-secondary);
-}
-.segmented-control button.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* ─── Rack-Focus Motion Keyframe ─── */
-/* Lens finding focus entrance animation */
-@keyframes rackFocus {
-  0% {
-    filter: blur(16px);
-    opacity: 0.4;
-    transform: scale(0.995);
-  }
-  100% {
-    filter: blur(0px);
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-rack-focus {
-  animation: rackFocus 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Stagger entrance delays */
-.stagger-panels > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-panels > *:nth-child(2) { animation-delay: 40ms; }
-.stagger-panels > *:nth-child(3) { animation-delay: 80ms; }
-.stagger-panels > *:nth-child(4) { animation-delay: 120ms; }
-.stagger-panels > *:nth-child(5) { animation-delay: 160ms; }
-.stagger-panels > *:nth-child(6) { animation-delay: 200ms; }
-.stagger-panels > *:nth-child(7) { animation-delay: 240ms; }
-.stagger-panels > *:nth-child(8) { animation-delay: 280ms; }
-.stagger-panels > *:nth-child(9) { animation-delay: 320ms; }
-.stagger-panels > *:nth-child(10) { animation-delay: 360ms; }
-
-/* Subtle fade in for tabs and content */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.animate-fade {
-  animation: fadeIn 0.25s ease-out both;
-}
-
 /* ─── Keyboard Focus Ring ─── */
 *:focus-visible {
-  outline: 1px solid rgba(255, 255, 255, 0.35);
+  outline: 3px solid #000000;
   outline-offset: 2px;
-  border-radius: var(--radius-sm);
 }
 
-/* ─── Tooltip override for Recharts ─── */
+/* ─── Tooltip override for Recharts: Solid block with hard offset shadow ─── */
 .recharts-tooltip-wrapper {
-  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+  filter: none !important;
 }

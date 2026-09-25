@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Wallet, Sparkles } from "lucide-react";
+import { Wallet, Sparkles, Terminal } from "lucide-react";
 import { useWeb3 } from "@/providers/Web3Provider";
 import { SystemHealth } from "@/types";
 
@@ -29,30 +29,32 @@ export const Header: React.FC<HeaderProps> = ({
   } = useWeb3();
 
   return (
-    <header className="pb-5 border-b border-[var(--glass-border-subtle)]" aria-label="Dashboard Header">
+    <header className="pb-5 border-b-2 border-black" aria-label="Dashboard Header">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Brand identity: Custom sharp geometric mark */}
-        <div className="flex items-center gap-3.5">
-          <div className="w-9 h-9 rounded-lg border border-[var(--glass-border)] bg-white/[0.04] backdrop-blur-[6px] flex items-center justify-center">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 18L10 6H14L8 18H4Z" fill="#F8FAFC" fillOpacity="0.95" />
-              <path d="M11 18L17 6H20L14 18H11Z" fill="#35C48F" fillOpacity="0.8" />
-            </svg>
+        {/* Brand identity: Bold Neo-Brutalist Block & Oversized Grotesque Typography */}
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 bg-black text-[#FFE600] border-2 border-black shadow-[3px_3px_0px_0px_#FFE600] flex items-center justify-center shrink-0">
+            <span className="font-display font-black text-xl tracking-tighter">ST</span>
           </div>
 
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-white font-sans">
-              STAVLOS
-            </h1>
-            <p className="text-xs text-[var(--text-muted)] font-mono tracking-normal">
-              Quantitative risk-adjusted stablecoin intelligence
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-black uppercase leading-none">
+                STAVLOS
+              </h1>
+              <span className="bg-[#00E575] text-black font-mono font-black text-[10px] px-1.5 py-0.5 border border-black uppercase tracking-wider">
+                v2.0 BRUTAL
+              </span>
+            </div>
+            <p className="text-xs text-[#333333] font-mono font-semibold tracking-normal mt-0.5">
+              QUANTITATIVE RISK ENGINE · DEFI ROTATION AGENT
             </p>
           </div>
         </div>
 
         {/* Right side controls: Chain selector, health, wallet actions */}
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* Home Chain Segmented Glass Control */}
+          {/* Home Chain Segmented Control (Solid blocky buttons) */}
           <div className="segmented-control" id="home-chain-selector">
             {CHAINS.map((chain) => (
               <button
@@ -60,38 +62,38 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onHomeChainChange(chain)}
                 className={chain === selectedHomeChain ? "active" : ""}
               >
-                <span>{chain}</span>
+                <span>{chain.toUpperCase()}</span>
               </button>
             ))}
           </div>
 
           {/* System Status Pill */}
-          <div className="glass-pill px-2.5 py-1 text-[11px] font-mono">
+          <div className="neo-pill bg-white px-2.5 py-1 text-[11px] font-mono font-bold text-black border-2 border-black shadow-[2px_2px_0px_#000]">
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                health?.status === "healthy" ? "bg-[#35C48F]" : "bg-[#D9A24B]"
+              className={`w-2 h-2 rounded-none border border-black ${
+                health?.status === "healthy" ? "bg-[#00E575]" : "bg-[#FFE600]"
               }`}
             />
-            <span>{health?.status === "healthy" ? "Live Feed" : "Sim"}</span>
+            <span>{health?.status === "healthy" ? "LIVE FEED" : "SIM"}</span>
           </div>
 
-          {/* Wallet Actions (Rebuilt with glass-fill + hairline border) */}
+          {/* Wallet Actions */}
           {isConnected && address ? (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/[0.06] border border-[var(--glass-border)] text-xs">
-              <span className="font-mono text-white font-medium">
+            <div className="flex items-center gap-2 px-3 py-1 bg-white border-2 border-black shadow-[3px_3px_0px_#000] text-xs font-mono">
+              <span className="text-black font-black">
                 {address.slice(0, 6)}…{address.slice(-4)}
               </span>
               {isDemoMode && (
-                <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[#D9A24B]/15 text-[#D9A24B] border border-[#D9A24B]/30">
+                <span className="text-[10px] font-mono px-1 py-0.2 bg-[#FFE600] text-black border border-black font-black uppercase">
                   Demo
                 </span>
               )}
               <button
                 onClick={disconnectWallet}
-                className="text-[var(--text-muted)] hover:text-[#E5484D] transition-colors ml-1 leading-none font-bold"
+                className="text-black hover:bg-[#FF4949] hover:text-white px-1 font-black transition-colors"
                 title="Disconnect wallet"
               >
-                ×
+                ✕
               </button>
             </div>
           ) : (
@@ -99,19 +101,19 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="glass-btn cursor-pointer"
+                className="neo-btn neo-btn-primary border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold"
               >
-                <Wallet className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
-                <span>{isConnecting ? "Connecting…" : "Connect Wallet"}</span>
+                <Wallet className="w-4 h-4 text-black stroke-[2.5]" />
+                <span>{isConnecting ? "CONNECTING…" : "CONNECT WALLET"}</span>
               </button>
 
               <button
                 onClick={() => simulateDemoWallet()}
-                className="glass-btn cursor-pointer"
+                className="neo-btn neo-btn-yellow border-2 border-black shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold"
                 title="Simulate read-only institutional portfolio"
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#D9A24B]" />
-                <span>Demo Portfolio</span>
+                <Sparkles className="w-4 h-4 text-black stroke-[2.5]" />
+                <span>DEMO PORTFOLIO</span>
               </button>
             </div>
           )}

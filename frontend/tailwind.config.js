@@ -9,72 +9,49 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+        display: ['Archivo Black', 'Space Grotesk', 'sans-serif'],
+        sans: ['Space Grotesk', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'monospace'],
       },
       colors: {
-        background: "#0D1321",
-        surface: "#16213E",
+        background: "#F5F3EF",
+        surface: "#FFFFFF",
+        neo: {
+          bg: "#F5F3EF",
+          card: "#FFFFFF",
+          black: "#000000",
+          green: "#00E575",
+          yellow: "#FFE600",
+          red: "#FF4949",
+          blue: "#38BDF8",
+          purple: "#A78BFA",
+          cream: "#FAF8F5",
+          muted: "#4A4A4A",
+          border: "#000000",
+        },
         jade: {
-          DEFAULT: "#35C48F",
-          dim: "rgba(53, 196, 143, 0.12)",
+          DEFAULT: "#00E575",
+          dim: "rgba(0, 229, 117, 0.15)",
         },
         copper: {
-          DEFAULT: "#D9A24B",
-          dim: "rgba(217, 162, 75, 0.12)",
+          DEFAULT: "#FFE600",
+          dim: "rgba(255, 230, 0, 0.15)",
         },
         alert: {
-          red: "#E5484D",
-          dim: "rgba(229, 72, 77, 0.12)",
+          red: "#FF4949",
+          dim: "rgba(255, 73, 73, 0.15)",
         },
-        glass: {
-          fill: "rgba(255, 255, 255, 0.06)",
-          hover: "rgba(255, 255, 255, 0.09)",
-          border: "rgba(255, 255, 255, 0.12)",
-          subtle: "rgba(255, 255, 255, 0.06)",
-        },
-        primary: "#35C48F",
-        secondary: "#94A3B8",
-        accent: {
-          teal: "#35C48F", // mapped to Jade
-          cyan: "#22d3ee",
-          emerald: "#35C48F",
-          rose: "#E5484D", // mapped to Alert Red
-          amber: "#D9A24B", // mapped to Copper
-          indigo: "#818cf8",
-          violet: "#a78bfa",
-        },
+        primary: "#00E575",
+        secondary: "#333333",
       },
-      borderColor: {
-        glass: "rgba(255, 255, 255, 0.12)",
-        "glass-subtle": "rgba(255, 255, 255, 0.06)",
-        subtle: "rgba(255, 255, 255, 0.06)",
-        default: "rgba(255, 255, 255, 0.12)",
-        emphasis: "rgba(255, 255, 255, 0.18)",
+      borderWidth: {
+        '3': '3px',
       },
-      animation: {
-        "rack-focus": "rackFocus 0.55s cubic-bezier(0.16, 1, 0.3, 1) both",
-        "fade-in-up": "fadeInUp 0.4s ease-out both",
-        "fade-in": "fadeIn 0.3s ease-out both",
-        "count-up": "countUp 0.5s ease-out both",
-      },
-      keyframes: {
-        rackFocus: {
-          "0%": { filter: "blur(18px)", opacity: "0.5", transform: "scale(0.99)" },
-          "100%": { filter: "blur(0px)", opacity: "1", transform: "scale(1)" },
-        },
-        fadeInUp: {
-          from: { opacity: "0", transform: "translateY(8px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        fadeIn: {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        countUp: {
-          from: { opacity: "0", transform: "translateY(3px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
+      boxShadow: {
+        'neo': '4px 4px 0px 0px #000000',
+        'neo-sm': '2px 2px 0px 0px #000000',
+        'neo-lg': '6px 6px 0px 0px #000000',
+        'neo-xl': '8px 8px 0px 0px #000000',
       },
     },
   },
